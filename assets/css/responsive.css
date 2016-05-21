@@ -1,0 +1,35 @@
+@media only screen
+and (max-width: 767px) {
+	.signup-form, .loader, .signup-process {
+		width: 100%;
+	}
+	.signup-form, .loader {
+		padding: 30px;
+	}
+	.signup-process {
+		padding: 0 15px;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+	}
+	.loader-wrapper {
+		padding: 0 15px;
+	}
+	.logo {
+		display: block;
+		margin: 0 auto 15px;
+	}
+	.member-login, .login {
+		float: none;
+		text-align: center;
+	}
+	.login {
+		display: inline-block;
+	}
+	.gt br {
+		display: none;
+	}
+	.timer {
+		margin: 0 auto;
+	}
+}
