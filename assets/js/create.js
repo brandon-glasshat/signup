@@ -21,7 +21,6 @@ var creator = {
           data: {},
           success : function (data, status) {
             if (!data.errors) {
-              console.log('semRush Data',data)
               that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
             } else {
               // handle errors
@@ -73,7 +72,6 @@ var creator = {
                 'accepts' 		: 'application/json',
                 'dataType' 		: 'JSON',
           success : function (data, status) {
-            console.log('result:', data);
             that.projectSave(data);
             $(".skip").addClass("fade-in").css("opacity", 1); // make skip step visible
             that.pollAudit();
@@ -172,8 +170,6 @@ var creator = {
                                 'fields'          : 'all'
                              };
 
-          console.log("newAccount ", newAccount);
-
           // GA Event
           ga('send',
              'event',
@@ -196,7 +192,6 @@ var creator = {
                   'accepts' 		  : 'application/json',
                   'dataType' 		  : 'JSON',
                   'success' 	   	: function (data, status) {
-                                      console.log('newAccount data', data);
                                       that.accountSave(data);
                                       if (data.account) {
                                           // finish animation
@@ -243,7 +238,7 @@ var creator = {
                 'dataType' 		  : 'JSON',
                 'success' 	   	: function (data, status) {
                                     if (!data.errors) {
-                                      console.log('updateProject data',data);
+                                      // console.log('updateProject data',data);
                                       that.createAccount();
                                     } else {
                                       console.log('updateProject errors',data.errors);
