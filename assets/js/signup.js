@@ -36,6 +36,15 @@ var validator = {
                                     validator.hasValidURLValue = suggestedUrl;
                                     $('.website-url').removeClass('bad wait').addClass('good');
 
+                                    // GA Event
+                                    ga('send',
+                                       'event',
+                                       'Walk-URL-Added',
+                                       'Walk-URL-Added' +
+                                           '__URL_' + suggestedUrlClean,
+                                       'Walk-Funnel-B'
+                                      );
+
                                     if (data.redirected === true && suggestedUrlClean !== urlClean) {
                                       // If we are here, the redirected url is significantly different
                                       $('#url').val(suggestedUrlClean); // write the redirected and clean URL back to input box
@@ -218,6 +227,17 @@ $(document).ready(function () {
     if(validator.hasValidURL && validator.hasValidName && validator.hasValidEmail && validator.hasValidPassword) {
       validator.tempStore(); // this needs to be changed.
       validator.cssAnimator(); // start CSS animations
+
+      // GA Event
+      ga('send',
+         'event',
+         'Walk-OK-Lets-Go',
+         'Walk-OK-Lets-Go' +
+             '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
+             '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
+             '__email_' + JSON.parse(localStorage.getItem("glass")).c,
+         'Walk-Funnel-B'
+        );
     } // end if
   }); // end validatePassword
 }); // end docuemnt ready

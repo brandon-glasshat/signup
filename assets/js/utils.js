@@ -1,7 +1,8 @@
 // Utils
 var Utils = {
-              'uiServer'  : 'https://app.glasshat.com/',
-              // production 'apiServer' : 'https://api-ui.glasshat.com/',
+              // Production : 'uiServer'  : 'https://app.glasshat.com/',
+              'uiServer'  : 'https://test-2.glasshat.com/latest/',
+              // Production :   'apiServer' : 'https://api-ui.glasshat.com/',
               'apiServer'  : 'https://test-2.glasshat.com/',
               'message' : function(containerClass, messageClass, message) {
                 $(messageClass).html(message);

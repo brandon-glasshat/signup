@@ -3,6 +3,7 @@ var creator = {
       "projectData" : {},
       "accountData" : {},
       "keyword" : "",
+      "custKW" : "",
       'projectSave' : function(data) {
           this.projectData = data;
           this.keyword = this.projectData.project.mappings[0].keywords[0].keyword;
@@ -20,6 +21,7 @@ var creator = {
           data: {},
           success : function (data, status) {
             if (!data.errors) {
+              console.log('semRush Data',data)
               that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
             } else {
               // handle errors
@@ -122,6 +124,19 @@ var creator = {
                     setTimeout(function() {
                       that.animateTick();
                     }, 1500);
+
+                    // GA Event
+                    ga('send',
+                       'event',
+                       'Walk-Actions-Generated',
+                       'Walk-Actions-Generated' +
+                           '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
+                           '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
+                           '__email_' + JSON.parse(localStorage.getItem("glass")).c +
+                           '__Actions_'   + data.tasks.length,
+                       'Walk-Funnel-B'
+                      );
+
                     increment = POLL_ITERATIONS; // max out iterations to exit
 
                   } else {
@@ -153,10 +168,24 @@ var creator = {
                                 'url'				      : JSON.parse(localStorage.getItem("glass")).a,
                                 'project_id' 		  : this.projectData.project.id,
                                 'project_name' 		: this.projectData.project.name,
-                                'login' 		    	: true // auto login to the App
+                                'login' 		    	: true, // auto login to the App
+                                'fields'          : 'all'
                              };
 
           console.log("newAccount ", newAccount);
+
+          // GA Event
+          ga('send',
+             'event',
+             'Walk-See-Action-Plan',
+             'Walk-See-Action-Plan' +
+                 '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
+                 '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
+                 '__email_' + JSON.parse(localStorage.getItem("glass")).c +
+                 '__GenKW_'   + this.keyword +
+                 '__CustKW_'   + this.custKW,
+             'Walk-Funnel-B'
+            );
 
           $.ajax({
                   'url'           : Utils.apiServer + 'account/create',
@@ -201,6 +230,8 @@ var creator = {
                                                   ]
                                                }
                              };
+
+        this.custKW = keyword; //Set custom keyword for GA.
 
         $.ajax({
                 'url'           : Utils.apiServer + '/onboarding/project/' + that.projectData.project.id + '/update',
@@ -259,16 +290,28 @@ var creator = {
 } // end creator
 // animations on walkthrough.html (finding best keyword, creating actions, generating plan)
 $(document).ready(function() {
+
+  $.ajaxSetup({
+              headers   : { 'Accept': 'application/json' },
+              xhrFields : { withCredentials: true }
+             });
+
   if(localStorage.getItem("glass") === null) {
       window.location.href = '/signup/';
 
   } else {
-      $.ajaxSetup({
-                  headers   : { 'Accept': 'application/json' },
-                  xhrFields : { withCredentials: true }
-               });
-      creator.keywordSuggest(JSON.parse(localStorage.getItem("glass")).a); // kick things off by starting keyword suggestion
+      var aStore = JSON.parse(localStorage.getItem("glass")).a;
+      setTimeout(function() {
+        creator.keywordSuggest(aStore); // kick things off by starting keyword suggestion
+      }, 500);
+
     	$(".walkthrough").addClass("animate"); // start timer animation
+
+      // Attach GA event to Skip button
+      $(".skip").click(function() {
+        //GA Event
+        ga('send','event','Walk-Skip','Walk-Skip','Walk-Funnel-B');
+      }); // end .skip click
 
     	// keyword popup
     	$(".ready-class").click(function() {
