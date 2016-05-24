@@ -1,10 +1,10 @@
 var temp;
 var creator = {
-      "kwMappings" : {},
+      "kwMappings"  : {},
       "projectData" : {},
       "accountData" : {},
-      "keyword" : "",
-      "custKW" : "",
+      "keyword"     : "",
+      "custKW"      : "",
       "autoPlanIds" : [],
       'projectSave' : function(data) {
           this.projectData = data;
@@ -16,6 +16,7 @@ var creator = {
       'keywordSuggest' : function(url) {
         var that = this,
             mappings;
+
         // get keyword suggestion data
         $.ajax({
           url: Utils.apiServer + 'keyword/semrush_suggestion?url=' + encodeURIComponent(url),
@@ -27,13 +28,12 @@ var creator = {
               that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
             } else {
               console.log('keyword errors',data.errors);
-              // handle errors
-              // ('Sorry, suggested keywords could not be retrieved at this time.');
+              // handle errors ('Sorry, suggested keywords could not be retrieved at this time.');
             }
           },
           error : function (data, status) {
               console.log('keyword API Error',data);
-            // ('Sorry, suggested keywords could not be retrieved at this time.');
+            // handle errors ('Sorry, suggested keywords could not be retrieved at this time.');
           }
         }); // $.ajax
       }, // end KeywordSuggest
@@ -45,29 +45,32 @@ var creator = {
 
           // map response to expected API JSON
           volumes.push({
-                        'keyword' 		: keywordSuggest.keyword,
-                        'volume' 			: keywordSuggest.volume,
-                        'cpc'					: keywordSuggest.cpc,
-                        'currency'		: 'USD'
+                        'keyword'  : keywordSuggest.keyword,
+                        'volume' 	 : keywordSuggest.volume,
+                        'cpc'			 : keywordSuggest.cpc,
+                        'currency' : 'USD'
                        });
           mapping.push({
-                        'url' 			  : url,
-                        'keywords'   	: [keywordSuggest.keyword]
+                        'url' 		 : url,
+                        'keywords' : [keywordSuggest.keyword]
                        });
           this.kwMappings = {
-                              'url'									: url,
-                              'volumes'							: volumes,
-                              'mappings'						: mapping,
-                              'search_engine_code' 	: keywordSuggest.search_engine_code
+                             'url'								: url,
+                             'volumes'						: volumes,
+                             'mappings'						: mapping,
+                             'search_engine_code' : keywordSuggest.search_engine_code
                             };
 
           this.createProject(); // create new project
 
       }, // end createVolumeMappings
       "createProject"  : function() {
+
+        var that = this;
+
         $(".wstep").css("opacity", 0);
         $(".wstep3").css("opacity", 1); // creating actions
-        var that = this;
+
         $.ajax({
                 url						: Utils.apiServer + '/onboarding/project/create',
                 method				: 'POST',
@@ -127,17 +130,17 @@ var creator = {
                       that.actionPriority(data.tasks);
                       that.animateTick();
 
-                    // GA Event
-                    ga('send',
-                       'event',
-                       'Walk-Actions-Generated',
-                       'Walk-Actions-Generated' +
-                           '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
-                           '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
-                           '__email_' + JSON.parse(localStorage.getItem("glass")).c +
-                           '__Actions_'   + data.tasks.length,
-                       'Walk-Funnel-B'
-                      );
+                  // GA Event
+                  ga('send',
+                     'event',
+                     'Walk-Actions-Generated',
+                     'Walk-Actions-Generated' +
+                         '__URL_'     + JSON.parse(localStorage.getItem("glass")).a +
+                         '__Name_'    + JSON.parse(localStorage.getItem("glass")).b +
+                         '__email_'   + JSON.parse(localStorage.getItem("glass")).c +
+                         '__Actions_' + data.tasks.length,
+                     'Walk-Funnel-B'
+                    );
 
                     increment = POLL_ITERATIONS; // max out iterations to exit
 
@@ -160,45 +163,45 @@ var creator = {
         }()); // end self-invoking daemon()
       }, // end pollAudit
       "actionPriority"  : function(data) {
-        var actions,
-            quickAudit,
-            fullAudit,
-            performance;
+          var actions,
+              quickAudit,
+              fullAudit,
+              performance;
 
-        actions = data.filter(function(a){return (a.severity !== 'ok')}); // Filter OK actions
+          actions = data.filter(function(a){return (a.severity !== 'ok')}); // Filter OK actions
 
-        function sortLogic (data, category) {
-          return actions.filter(function(a){return (a.task_type === category)})
-                        .sort(function(a, b){return a.priority - b.priority})
-                        .slice(0, Utils.actionCap)
-                        .map(function(a){return a.id});
-        }; // end sortLogic
+          function sortLogic (data, category) {
+            return actions.filter(function(a){return (a.task_type === category)})
+                          .sort(function(a, b){return a.priority - b.priority})
+                          .slice(0, Utils.actionCap)
+                          .map(function(a){return a.id});
+          }; // end sortLogic
 
-        quickAudit  = sortLogic(data, 'quick_audit');
-        fullAudit   = sortLogic(data, 'full_audit');
-        performance = sortLogic(data, 'performance');
+          quickAudit  = sortLogic(data, 'quick_audit');
+          fullAudit   = sortLogic(data, 'full_audit');
+          performance = sortLogic(data, 'performance');
 
-        console.log('quickAudit', quickAudit);
-        console.log('fullAudit', fullAudit);
-        console.log('performance', performance);
+          console.log('quickAudit', quickAudit);
+          console.log('fullAudit', fullAudit);
+          console.log('performance', performance);
 
-        this.autoPlanIds = quickAudit.concat(fullAudit, performance); // Add prioritised actions in order
+          this.autoPlanIds = quickAudit.concat(fullAudit, performance); // Add prioritised actions in order
 
       }, // end actionPriority
       "createAccount"  : function() {
           var that = this,
               newAccount =  {
-                                'account'         : {
-                                                      'email'      : JSON.parse(localStorage.getItem("glass")).c,
-                                                      'first_name' : JSON.parse(localStorage.getItem("glass")).b
-                                                    },
-                                'new_password'    : JSON.parse(localStorage.getItem("glass")).d,
-                                'url'				      : JSON.parse(localStorage.getItem("glass")).a,
-                                'project_id' 		  : this.projectData.project.id,
-                                'project_name' 		: this.projectData.project.name,
-                                'planned_tasks'   : this.autoPlanIds,
-                                'login' 		    	: true, // auto login to the App
-                                'fields'          : 'all'
+                             'account'      : {
+                                                'email'      : JSON.parse(localStorage.getItem("glass")).c,
+                                                'first_name' : JSON.parse(localStorage.getItem("glass")).b
+                                              },
+                             'new_password' : JSON.parse(localStorage.getItem("glass")).d,
+                             'url'				  : JSON.parse(localStorage.getItem("glass")).a,
+                             'project_id'   : this.projectData.project.id,
+                             'project_name' : this.projectData.project.name,
+                             'planned_tasks': this.autoPlanIds,
+                             'login' 		    : true, // auto login to the App
+                             'fields'       : 'all'
                              };
 
           // GA Event
@@ -206,23 +209,23 @@ var creator = {
              'event',
              'Walk-See-Action-Plan',
              'Walk-See-Action-Plan' +
-                 '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
-                 '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
-                 '__email_' + JSON.parse(localStorage.getItem("glass")).c +
-                 '__GenKW_'   + this.keyword +
-                 '__CustKW_'   + this.custKW,
+                 '__URL_'    + JSON.parse(localStorage.getItem("glass")).a +
+                 '__Name_'   + JSON.parse(localStorage.getItem("glass")).b +
+                 '__email_'  + JSON.parse(localStorage.getItem("glass")).c +
+                 '__GenKW_'  + this.keyword +
+                 '__CustKW_' + this.custKW,
              'Walk-Funnel-B'
             );
 
           $.ajax({
-                  'url'           : Utils.apiServer + 'account/create',
-                  'method'        : 'POST',
-                  'data'          : JSON.stringify(newAccount),
-                  'processData' 	: true,
-                  'contentType' 	: 'application/json',
-                  'accepts' 		  : 'application/json',
-                  'dataType' 		  : 'JSON',
-                  'success' 	   	: function (data, status) {
+                  'url'         : Utils.apiServer + 'account/create',
+                  'method'      : 'POST',
+                  'data'        : JSON.stringify(newAccount),
+                  'processData' : true,
+                  'contentType' : 'application/json',
+                  'accepts' 	  : 'application/json',
+                  'dataType' 	  : 'JSON',
+                  'success' 	 	: function (data, status) {
                                       that.accountSave(data);
                                       if (data.account) {
                                           // finish animation
@@ -239,45 +242,43 @@ var creator = {
                                     'error' : function (data, status) {
                                         console.log("ajax.error");
                                     } // end success
-          }); // end ajax
+                }); // end ajax
       }, //end createAccount
       "updateProject"  : function(keyword) {
-
         var that = this,
             updateProject = {
                       				"project_name" : this.projectData.project.name,
                               "project" 		 : {
-                                                  // "search_engine_code": "google_en-au",
-                                                  "mappings" : [
-                                                    {
-                                                     "url" : this.projectData.project.url,
-                                                     "keywords" : [{"keyword": keyword}]
-                                                    }
-                                                  ]
+                                                "mappings" : [
+                                                  {
+                                                   "url" : this.projectData.project.url,
+                                                   "keywords" : [{"keyword": keyword}]
+                                                  }
+                                                ]
                                                }
-                             };
+                            };
 
         this.custKW = keyword; //Set custom keyword for GA.
 
         $.ajax({
-                'url'           : Utils.apiServer + '/onboarding/project/' + that.projectData.project.id + '/update',
-                'method'        : 'POST',
-                'data'          : JSON.stringify(updateProject),
-                'processData' 	: true,
-                'contentType' 	: 'application/json',
-                'accepts' 		  : 'application/json',
-                'dataType' 		  : 'JSON',
-                'success' 	   	: function (data, status) {
-                                    if (!data.errors) {
-                                      // console.log('updateProject data',data);
-                                      that.createAccount();
-                                    } else {
-                                      console.log('updateProject errors',data.errors);
-                                    } // end else
-                                  },
-                'error'         : function (data, status) {
-                                    console.log("ajax.error");
-                                  } // end success
+                'url'         : Utils.apiServer + '/onboarding/project/' + that.projectData.project.id + '/update',
+                'method'      : 'POST',
+                'data'        : JSON.stringify(updateProject),
+                'processData' : true,
+                'contentType' : 'application/json',
+                'accepts' 		: 'application/json',
+                'dataType' 	  : 'JSON',
+                'success' 	 	: function (data, status) {
+                                  if (!data.errors) {
+                                    // console.log('updateProject data',data);
+                                    that.createAccount();
+                                  } else {
+                                    console.log('updateProject errors',data.errors);
+                                  } // end else
+                                },
+                'error'       : function (data, status) {
+                                  console.log("ajax.error");
+                                } // end success
         }); // end ajax
       }, // end updateProject
       "redirect"  : function() {
