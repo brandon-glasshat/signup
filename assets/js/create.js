@@ -1,9 +1,11 @@
+var temp;
 var creator = {
       "kwMappings" : {},
       "projectData" : {},
       "accountData" : {},
       "keyword" : "",
       "custKW" : "",
+      "autoPlanIds" : [],
       'projectSave' : function(data) {
           this.projectData = data;
           this.keyword = this.projectData.project.mappings[0].keywords[0].keyword;
@@ -21,13 +23,16 @@ var creator = {
           data: {},
           success : function (data, status) {
             if (!data.errors) {
+              console.log('keyword data',data);
               that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
             } else {
+              console.log('keyword errors',data.errors);
               // handle errors
               // ('Sorry, suggested keywords could not be retrieved at this time.');
             }
           },
           error : function (data, status) {
+              console.log('keyword API Error',data);
             // ('Sorry, suggested keywords could not be retrieved at this time.');
           }
         }); // $.ajax
@@ -60,9 +65,12 @@ var creator = {
 
       }, // end createVolumeMappings
       "createProject"  : function() {
+
+        var that = this;
+
         $(".wstep").css("opacity", 0);
         $(".wstep3").css("opacity", 1); // creating actions
-        var that = this;
+
         $.ajax({
                 url						: Utils.apiServer + '/onboarding/project/create',
                 method				: 'POST',
@@ -83,8 +91,10 @@ var creator = {
 
       }, //end createProject
       'pollAudit' : function() {
+
         $(".wstep").css("opacity", 0);
         $(".wstep4").css("opacity", 1); // creating actions
+
         var that = this,
             tasksUrl = Utils.apiServer + 'onboarding/project/' + this.projectData.project.id + '/tasks',
             TIME_INTERVAL = 5 * 1000, // poll time intervals
@@ -116,22 +126,21 @@ var creator = {
               success: function (data, status){
                 if (!data.errors) {
                   console.log('data.tasks.length ', data.tasks.length);
+
                   // cancel polling if actions are available
                   if (data.tasks.length > 0) {
-                    $(".wstep4").text(data.tasks.length + " actions copied");
-                    setTimeout(function() {
+                      that.actionPriority(data.tasks); // Auto plan actions
                       that.animateTick();
-                    }, 1500);
 
                     // GA Event
                     ga('send',
                        'event',
                        'Walk-Actions-Generated',
                        'Walk-Actions-Generated' +
-                           '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
-                           '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
-                           '__email_' + JSON.parse(localStorage.getItem("glass")).c +
-                           '__Actions_'   + data.tasks.length,
+                           '__URL_'     + JSON.parse(localStorage.getItem("glass")).a +
+                           '__Name_'    + JSON.parse(localStorage.getItem("glass")).b +
+                           '__email_'   + JSON.parse(localStorage.getItem("glass")).c +
+                           '__Actions_' + data.tasks.length,
                        'Walk-Funnel-B'
                       );
 
@@ -155,19 +164,43 @@ var creator = {
             } //end else
         }()); // end self-invoking daemon()
       }, // end pollAudit
+      "actionPriority" : function(data) {
+          var quickAudit,
+              fullAudit,
+              performance;
+
+          function sortLogic (data, category) {
+            return data.filter(function(a){return (a.task_type === category)})
+                       .sort(function(a, b){return a.priority - b.priority})
+                       .slice(0, Utils.actionCap)
+                       .map(function(a){return a.id});
+          }; // end sortLogic
+
+          quickAudit  = sortLogic(data, 'quick_audit');
+          fullAudit   = sortLogic(data, 'full_audit');
+          performance = sortLogic(data, 'performance');
+
+          console.log('quickAudit', quickAudit);
+          console.log('fullAudit', fullAudit);
+          console.log('performance', performance);
+
+          this.autoPlanIds = quickAudit.concat(fullAudit, performance); // Add prioritised actions in order
+
+      }, // end actionPriority
       "createAccount"  : function() {
           var that = this,
               newAccount =  {
-                                'account'         : {
-                                                      'email'      : JSON.parse(localStorage.getItem("glass")).c,
-                                                      'first_name' : JSON.parse(localStorage.getItem("glass")).b
-                                                    },
-                                'new_password'    : JSON.parse(localStorage.getItem("glass")).d,
-                                'url'				      : JSON.parse(localStorage.getItem("glass")).a,
-                                'project_id' 		  : this.projectData.project.id,
-                                'project_name' 		: this.projectData.project.name,
-                                'login' 		    	: true, // auto login to the App
-                                'fields'          : 'all'
+                              'account'       : {
+                                                  'email'      : JSON.parse(localStorage.getItem("glass")).c,
+                                                  'first_name' : JSON.parse(localStorage.getItem("glass")).b
+                                                },
+                              'new_password'  : JSON.parse(localStorage.getItem("glass")).d,
+                              'url'				    : JSON.parse(localStorage.getItem("glass")).a,
+                              'project_id' 	  : this.projectData.project.id,
+                              'project_name'  : this.projectData.project.name,
+                              'planned_tasks' : this.autoPlanIds,
+                              'login' 		  	: true, // auto login to the App
+                              'fields'        : 'all'
                              };
 
           // GA Event
@@ -175,11 +208,11 @@ var creator = {
              'event',
              'Walk-See-Action-Plan',
              'Walk-See-Action-Plan' +
-                 '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
-                 '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
-                 '__email_' + JSON.parse(localStorage.getItem("glass")).c +
-                 '__GenKW_'   + this.keyword +
-                 '__CustKW_'   + this.custKW,
+                 '__URL_'    + JSON.parse(localStorage.getItem("glass")).a +
+                 '__Name_'   + JSON.parse(localStorage.getItem("glass")).b +
+                 '__email_'  + JSON.parse(localStorage.getItem("glass")).c +
+                 '__GenKW_'  + this.keyword +
+                 '__CustKW_' + this.custKW,
              'Walk-Funnel-B'
             );
 
@@ -254,7 +287,7 @@ var creator = {
         localStorage.clear(); // clear temp local storage.
         (function loadDelay() {
           setTimeout(function(){
-            newUrl = Utils.uiServer + '#clients/' + that.accountData.client_id + '/' + 'campaigns/' + that.accountData.project_id;
+            newUrl = Utils.uiServer + '#clients/' + that.accountData.client_id + '/' + 'campaigns/' + that.accountData.project_id + '/plan';
             console.log("redirect to main App ", newUrl);
             window.location.href = newUrl;
           }, 1000);
@@ -314,6 +347,11 @@ $(document).ready(function() {
     		$(".mask").fadeIn();
     		$(".keyword-popup").fadeIn();
     	});
+
+      // questionmark popup
+      $(".question-mark").hover(function() {
+    		$(".question-popup").toggle();
+    	})
 
     	// keyword submit
     	$("#user-kw-submit").click(function() {

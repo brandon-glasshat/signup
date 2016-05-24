@@ -1,5 +1,5 @@
 
-// inspectlet code
+// Anal. inspectlet
 window.__insp = window.__insp || [];
 __insp.push(['wid', 1289821838]);
 (function() {

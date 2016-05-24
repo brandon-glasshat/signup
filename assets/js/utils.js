@@ -18,4 +18,5 @@ var Utils = {
                   $('.hopscotch-bubble-arrow-container').show();
                 }, 150);
               }, // end arrowShow
+              'actionCap' : 4 // Set the number of actions per category (quick_audit, full_audit, performance) 
             }; // end Utils
