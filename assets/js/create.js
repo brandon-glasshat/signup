@@ -65,12 +65,9 @@ var creator = {
 
       }, // end createVolumeMappings
       "createProject"  : function() {
-
-        var that = this;
-
         $(".wstep").css("opacity", 0);
         $(".wstep3").css("opacity", 1); // creating actions
-
+        var that = this;
         $.ajax({
                 url						: Utils.apiServer + '/onboarding/project/create',
                 method				: 'POST',
@@ -91,10 +88,8 @@ var creator = {
 
       }, //end createProject
       'pollAudit' : function() {
-
         $(".wstep").css("opacity", 0);
         $(".wstep4").css("opacity", 1); // creating actions
-
         var that = this,
             tasksUrl = Utils.apiServer + 'onboarding/project/' + this.projectData.project.id + '/tasks',
             TIME_INTERVAL = 5 * 1000, // poll time intervals
@@ -129,7 +124,7 @@ var creator = {
 
                   // cancel polling if actions are available
                   if (data.tasks.length > 0) {
-                      that.actionPriority(data.tasks); // Auto plan actions
+                      that.actionPriority(data.tasks);
                       that.animateTick();
 
                     // GA Event
@@ -137,10 +132,10 @@ var creator = {
                        'event',
                        'Walk-Actions-Generated',
                        'Walk-Actions-Generated' +
-                           '__URL_'     + JSON.parse(localStorage.getItem("glass")).a +
-                           '__Name_'    + JSON.parse(localStorage.getItem("glass")).b +
-                           '__email_'   + JSON.parse(localStorage.getItem("glass")).c +
-                           '__Actions_' + data.tasks.length,
+                           '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
+                           '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
+                           '__email_' + JSON.parse(localStorage.getItem("glass")).c +
+                           '__Actions_'   + data.tasks.length,
                        'Walk-Funnel-B'
                       );
 
@@ -164,43 +159,46 @@ var creator = {
             } //end else
         }()); // end self-invoking daemon()
       }, // end pollAudit
-      "actionPriority" : function(data) {
-          var quickAudit,
-              fullAudit,
-              performance;
+      "actionPriority"  : function(data) {
+        var actions,
+            quickAudit,
+            fullAudit,
+            performance;
 
-          function sortLogic (data, category) {
-            return data.filter(function(a){return (a.task_type === category)})
-                       .sort(function(a, b){return a.priority - b.priority})
-                       .slice(0, Utils.actionCap)
-                       .map(function(a){return a.id});
-          }; // end sortLogic
+        actions = data.filter(function(a){return (a.severity !== 'ok')}); // Filter OK actions
 
-          quickAudit  = sortLogic(data, 'quick_audit');
-          fullAudit   = sortLogic(data, 'full_audit');
-          performance = sortLogic(data, 'performance');
+        function sortLogic (data, category) {
+          return actions.filter(function(a){return (a.task_type === category)})
+                        .sort(function(a, b){return a.priority - b.priority})
+                        .slice(0, Utils.actionCap)
+                        .map(function(a){return a.id});
+        }; // end sortLogic
 
-          console.log('quickAudit', quickAudit);
-          console.log('fullAudit', fullAudit);
-          console.log('performance', performance);
+        quickAudit  = sortLogic(data, 'quick_audit');
+        fullAudit   = sortLogic(data, 'full_audit');
+        performance = sortLogic(data, 'performance');
 
-          this.autoPlanIds = quickAudit.concat(fullAudit, performance); // Add prioritised actions in order
+        console.log('quickAudit', quickAudit);
+        console.log('fullAudit', fullAudit);
+        console.log('performance', performance);
+
+        this.autoPlanIds = quickAudit.concat(fullAudit, performance); // Add prioritised actions in order
 
       }, // end actionPriority
       "createAccount"  : function() {
           var that = this,
               newAccount =  {
-                              'account'       : {
-                                                  'email'      : JSON.parse(localStorage.getItem("glass")).c,
-                                                  'first_name' : JSON.parse(localStorage.getItem("glass")).b
-                                                },
-                              'new_password'  : JSON.parse(localStorage.getItem("glass")).d,
-                              'url'				    : JSON.parse(localStorage.getItem("glass")).a,
-                              'project_id' 	  : this.projectData.project.id,
-                              'project_name'  : this.projectData.project.name,
-                              'planned_tasks' : this.autoPlanIds,
-                              'login' 		  	: true, // auto login to the App
-                              'fields'        : 'all'
+                                'account'         : {
+                                                      'email'      : JSON.parse(localStorage.getItem("glass")).c,
+                                                      'first_name' : JSON.parse(localStorage.getItem("glass")).b
+                                                    },
+                                'new_password'    : JSON.parse(localStorage.getItem("glass")).d,
+                                'url'				      : JSON.parse(localStorage.getItem("glass")).a,
+                                'project_id' 		  : this.projectData.project.id,
+                                'project_name' 		: this.projectData.project.name,
+                                'planned_tasks'   : this.autoPlanIds,
+                                'login' 		    	: true, // auto login to the App
+                                'fields'          : 'all'
                              };
 
           // GA Event
@@ -208,11 +206,11 @@ var creator = {
              'event',
              'Walk-See-Action-Plan',
              'Walk-See-Action-Plan' +
-                 '__URL_'    + JSON.parse(localStorage.getItem("glass")).a +
-                 '__Name_'   + JSON.parse(localStorage.getItem("glass")).b +
-                 '__email_'  + JSON.parse(localStorage.getItem("glass")).c +
-                 '__GenKW_'  + this.keyword +
-                 '__CustKW_' + this.custKW,
+                 '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
+                 '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
+                 '__email_' + JSON.parse(localStorage.getItem("glass")).c +
+                 '__GenKW_'   + this.keyword +
+                 '__CustKW_'   + this.custKW,
              'Walk-Funnel-B'
             );
 
@@ -330,7 +328,7 @@ $(document).ready(function() {
   } else {
       var aStore = JSON.parse(localStorage.getItem("glass")).a;
       setTimeout(function() {
-        creator.keywordSuggest(aStore); // kick things off by starting keyword suggestion
+        creator.keywordSuggecst(aStore); // kick things off by starting keyword suggestion
       }, 500);
 
     	$(".walkthrough").addClass("animate"); // start timer animation
