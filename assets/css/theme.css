@@ -492,11 +492,11 @@ header.walkthrough-header {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	margin-left: -275px;
-	z-index: 200;
 	text-align: center;
 	display: none;
 	color: #2b2b2b;
 	margin-top: -190px;
+	z-index:200;
 }
 .keyword-popup h2 {
 	margin-top: 0;
@@ -538,6 +538,7 @@ header.walkthrough-header {
 .keyword-popup input[type="submit"]:hover {
 	background-color: #FE9602;
 }
+
 .question-mark {
     background-image: url("../img/question.png");
     bottom: -3px;
@@ -549,14 +550,13 @@ header.walkthrough-header {
     cursor: pointer;
 }
 
-div.question {
+.question {
   background-color: rgb(255, 255, 255);
   border: 5px solid rgba(255, 102, 0, 0.5);
   color: #333;
   font-family: Helvetica, Arial;
   font-size: 14px;
   position: absolute;
-  z-index: 1;
   -moz-background-clip: padding;
   -webkit-background-clip: padding;
   background-clip: padding-box;
@@ -565,40 +565,44 @@ div.question {
   -o-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
+	top: 96px;
+	left: 345px;
 	display: none;
-	top: 75px;
-	left: 420px;
 }
 
-div.question .question-container {
-  padding: 30px;
+/* Toggle questionmark hover
+#question-mark:hover + .question {
+    display: block;
+}*/
+
+.question .question-container {
+  padding: 20px;
   position: relative;
   text-align: left;
   -webkit-font-smoothing: antialiased;
   /* to fix text flickering */
   width: 200px;
-  padding: 30px;
 }
 
-div.question .question-arrow-container {
+.question .question-arrow-container {
   position: absolute;
   width: 34px;
   height: 34px;
 }
 
-div.question .question-arrow-container.left {
+.question .question-arrow-container.left {
   top: 30px;
   left: -39px;
 }
 
-div.question .question-arrow-container.left .question-arrow-border {
+.question .question-arrow-container.left .question-arrow-border {
   border-right: 17px solid rgb(255, 102, 0);
   border-right: 17px solid rgba(255, 102, 0, 0.5);
   border-bottom: 17px solid transparent;
   border-top: 17px solid transparent;
 }
 
-div.question .question-arrow-container.left .question-arrow {
+.question .question-arrow-container.left .question-arrow {
   border-bottom: 17px solid transparent;
   /* border-right: 17px solid #ffffff; */
   border-right: 17px solid rgb(255, 255, 255); /* post-it note */
@@ -606,6 +610,24 @@ div.question .question-arrow-container.left .question-arrow {
   position: relative;
   left: 7px;
   top: -34px;
+}
+
+.question .question-content {
+  font-family: Helvetica, Arial;
+  font-weight: normal;
+  line-height: 17px;
+  margin: -5px 0 0px;
+  padding-top: 8px;
+}
+
+.question h3 {
+  color: #000;
+  font-family: Helvetica, Arial;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 19px;
+  margin: -1px 15px 0 0;
+  padding: 0;
 }
 
 /* ANIMATIONS */

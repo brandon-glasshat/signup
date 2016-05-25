@@ -4,7 +4,7 @@ var tour = {
     {
       target: 'screenshot',
       title: 'While you’re waiting, take a tour of our dashboard',
-      content: 'We\'re just building the action plan for your website, so in the meantime we want to show you how a couple of things work around here...<p class="pageId">Step 1 of 9</p>',
+      content: 'We\'re just building the action plan for your website, so in the meantime we want to show you how a couple of things work around here...<p class="pageId">Step 1 of 10</p>',
       placement: 'top',
       arrowOffset: 0,
       zindex: 2,
@@ -24,7 +24,7 @@ var tour = {
     {
       target: 'action',
       title: 'Your action plan',
-      content: 'Think of your action plan as your website\'s \'to-do list\'.</p>Quickly see how long each action takes to complete and which are the easiest to get started on<p class="pageId">Step 2 of 9</p>',
+      content: 'Think of your action plan as your website\'s \'to-do list\'.</p>Quickly see how long each action takes to complete and which are the easiest to get started on<p class="pageId">Step 2 of 10</p>',
       placement: 'right',
       arrowOffset: 75,
       zindex: 2,
@@ -49,7 +49,7 @@ var tour = {
     {
       target: 'actiondesc',
       title: 'Need to know how to complete each action?',
-      content: 'Click on each action to see step-by-step instructions that include expert hints and tips to help you to complete the action like a pro.<p class="pageId">Step 3 of 9</p>',
+      content: 'Click on each action to see step-by-step instructions that include expert hints and tips to help you to complete the action like a pro.<p class="pageId">Step 3 of 10</p>',
       placement: 'top',
       arrowOffset: 0,
       zindex: 2,
@@ -71,7 +71,7 @@ var tour = {
     {
       target: 'exporttocsv',
       title: 'Want to send this work onto someone else?',
-      content: 'You can easily download a list of the URLs that require work by hitting \'Export\'.<p class="pageId">Step 4 of 9</p>',
+      content: 'You can easily download a list of the URLs that require work by hitting \'Export\'.<p class="pageId">Step 4 of 10</p>',
       placement: 'top',
       arrowOffset: 250,
       zindex: 2,
@@ -93,7 +93,7 @@ var tour = {
     {
       target: 'actionstab',
       title: 'Ready to add more actions to your plan?',
-      content: 'Visit the \'Actions\' tab to explore all the latest recommendations we\'ve generated for your website. <p class="pageId">Step 5 of 9</p>',
+      content: 'Visit the \'Actions\' tab to explore all the latest recommendations we\'ve generated for your website. <p class="pageId">Step 5 of 10</p>',
       placement: 'bottom',
       arrowOffset: 50,
       zindex: 2,
@@ -117,7 +117,7 @@ var tour = {
     {
       target: 'filter',
       title: 'Looking for something specific?',
-      content: 'Filter the type of action you want to see by category, time or difficulty.<p class="pageId">Step 6 of 9</p>',
+      content: 'Filter the type of action you want to see by category, time or difficulty.<p class="pageId">Step 6 of 10</p>',
       placement: 'right',
       arrowOffset: 30,
       zindex: 2,
@@ -139,7 +139,7 @@ var tour = {
     {
       target: 'healthcheck',
       title: 'Add Healthcheck Actions to your plan',
-      content: 'At the top of the \'Actions\' tab you\'ll find all the general housekeeping actions we have lined up for you.</p>Did you know that even basic issues with your website can prevent potential leads from finding you online?<p class="pageId">Step 7 of 9</p>',
+      content: 'At the top of the \'Actions\' tab you\'ll find all the general housekeeping actions we have lined up for you.</p>Did you know that even basic issues with your website can prevent potential leads from finding you online?<p class="pageId">Step 7 of 10</p>',
       placement: 'top',
       arrowOffset: 30,
       zindex: 2,
@@ -161,7 +161,7 @@ var tour = {
     {
       target: 'performance',
       title: 'Select Performance Actions to start overtaking competitors',
-      content: 'The actions below are generated when we detect that your competitors are doing something that\'s helping them to get found online.</p>Completing these actions will help to boost your position in Google, driving more visitors to your website.<p class="pageId">Step 8 of 9</p>',
+      content: 'The actions below are generated when we detect that your competitors are doing something that\'s helping them to get found online.</p>Completing these actions will help to boost your position in Google, driving more visitors to your website.<p class="pageId">Step 8 of 10</p>',
       placement: 'top',
       arrowOffset: 30,
       zindex: 2,
@@ -184,7 +184,7 @@ var tour = {
     {
       target: 'screenshot',
       title: 'Simple project setup',
-      content: 'Finally you can customise your project at any time in the Project Setup tab.</p>You can update and edit your project details, the keywords you want to target and URL\'s you want to focus on here.<p class="pageId">Step 9 of 9</p>',
+      content: 'Finally you can customise your project at any time in the Project Setup tab.</p>You can update and edit your project details, the keywords you want to target and URL\'s you want to focus on here.<p class="pageId">Step 9 of 10</p>',
       placement: 'top',
       arrowOffset: 0,
       zindex: 2,
@@ -195,9 +195,23 @@ var tour = {
         $('#screenshot').css("background-image", "url(assets/img/ss/3.png)");
         Utils.arrowShow();
       }, //end OnPrev
-      onClose: function() {
-        ga('send', 'event', 'Walk-Step9-Close', 'Walk-Step9-Close__Simple-project-setup', 'Walk-Funnel-B');
-      }, // endOnClose
+      onNext: function() {
+        Utils.arrowHide();
+      } //end OnPrev
+    },
+    {
+      target: 'screenshot',
+      title: 'And that\'s just the start...',
+      content: 'Check at the top of the page to see when we\'re done building the action plan. <p class="pageId">Step 10 of 10</p>',
+      placement: 'top',
+      arrowOffset: 0,
+      zindex: 2,
+      xOffset: 'center',
+      yOffset: 350,
+      width: 450,
+      onPrev: function() {
+        Utils.arrowShow();
+      } //end OnPrev
     }
   ],
       onEnd: function () {
