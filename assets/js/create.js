@@ -23,6 +23,7 @@ var creator = {
           method: 'GET',
           data: {},
           success : function (data, status) {
+            console.log('semrush_suggestion',data);
             if (!data.errors) {
               console.log('keyword data',data);
               that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
@@ -329,8 +330,8 @@ $(document).ready(function() {
   } else {
       var aStore = JSON.parse(localStorage.getItem("glass")).a;
       setTimeout(function() {
-        creator.keywordSuggecst(aStore); // kick things off by starting keyword suggestion
-      }, 500);
+        creator.keywordSuggest(aStore); // kick things off by starting keyword suggestion
+      }, 700);
 
     	$(".walkthrough").addClass("animate"); // start timer animation
 
@@ -349,7 +350,7 @@ $(document).ready(function() {
 
       // questionmark popup
       $(".question-mark").hover(function() {
-    		$(".question-popup").toggle();
+    		$(".question").toggle();
     	})
 
     	// keyword submit
