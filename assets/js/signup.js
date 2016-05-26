@@ -1,4 +1,3 @@
-var temp;
 
 // Signup Fields Validation
 var validator = {
