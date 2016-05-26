@@ -167,9 +167,13 @@ var validator = {
 // Attach blur event to input fields
 $(document).ready(function () {
   $.ajaxSetup({
-              headers   : { 'Accept': 'application/json' },
-              xhrFields : { withCredentials: true }
-           });
+              headers   : { 'Accept' : 'application/json',
+                            'Access-Control-Allow-Origin' : '*'
+                          },
+              xhrFields : { 'withCredentials' : true
+                          }
+            });
+
   $('#url').blur(function () {
     $('.website-url').addClass('wait');
     validator.validateUrl($('#url').val());

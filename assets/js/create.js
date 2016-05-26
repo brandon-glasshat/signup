@@ -22,8 +22,6 @@ var creator = {
           url: Utils.apiServer + 'keyword/semrush_suggestion?url=' + encodeURIComponent(url),
           method: 'GET',
           data: {},
-          headers   : { 'Accept': 'application/json' },
-          xhrFields : { withCredentials: true },
           success : function (data, status) {
             console.log('semrush_suggestion',data);
             if (!data.errors) {
@@ -82,9 +80,6 @@ var creator = {
                 'contentType' : 'application/json',
                 'accepts' 		: 'application/json',
                 'dataType' 		: 'JSON',
-                'headers'     : { 'Accept': 'application/json' },
-                'xhrFields'   : { withCredentials: true },
-          success : function (data, status) {
             that.projectSave(data);
             $(".skip").addClass("fade-in").css("opacity", 1); // make skip step visible
             that.pollAudit();
@@ -121,8 +116,6 @@ var creator = {
             $.ajax({
               url             : tasksUrl,
               method          : 'GET',
-              'headers'       : { 'Accept': 'application/json' },
-              'xhrFields'     : { withCredentials: true },
               data: {
                 project_name  : that.projectData.project.name,
                 fields        : 'all',
@@ -232,8 +225,6 @@ var creator = {
                   'contentType' : 'application/json',
                   'accepts' 	  : 'application/json',
                   'dataType' 	  : 'JSON',
-                  'headers'     : { 'Accept': 'application/json' },
-                  'xhrFields'   : { withCredentials: true },
                   'success' 	 	: function (data, status) {
                                       that.accountSave(data);
                                       if (data.account) {
@@ -279,8 +270,6 @@ var creator = {
                 'contentType' : 'application/json',
                 'accepts' 		: 'application/json',
                 'dataType' 	  : 'JSON',
-                'headers'     : { 'Accept': 'application/json' },
-                'xhrFields'   : { withCredentials: true },
                 'success' 	 	: function (data, status) {
                                   if (!data.errors) {
                                     // console.log('updateProject data',data);
@@ -333,19 +322,21 @@ var creator = {
 
 $(document).ready(function() {
 
-  /*$.ajaxSetup({
-              headers   : { 'Accept': 'application/json' },
-              xhrFields : { withCredentials: true }
-            }); */
+  $.ajaxSetup({
+              headers   : { 'Accept' : 'application/json',
+                            'Access-Control-Allow-Origin' : '*'
+                          },
+              xhrFields : { 'withCredentials' : true
+                          }
+            });
 
   if(localStorage.getItem("glass") === null) {
       window.location.href = '/signup/';
 
   } else {
       var aStore = JSON.parse(localStorage.getItem("glass")).a;
-      setTimeout(function() {
-        creator.keywordSuggest(aStore); // kick things off by starting keyword suggestion
-      }, 700);
+
+      creator.keywordSuggest(aStore); // kick things off by starting keyword suggestion
 
     	$(".walkthrough").addClass("animate"); // start timer animation
 
