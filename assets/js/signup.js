@@ -96,7 +96,7 @@ var validator = {
           } else {
 
             $.ajax({
-                'url'         : Utils.apiServer + 'account/validate?email=' + emailField,
+                'url'         : Utils.apiServer + 'account/validate?email=' + encodeURIComponent(emailField),
                 'type'        : 'GET',
                 'xhrFields'   : {'withCredentials' : true},
                 'processData' : true,
