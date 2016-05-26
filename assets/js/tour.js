@@ -199,7 +199,6 @@ var tour = {
         Utils.arrowHide();
         ga('send', 'event', 'Walk-Step9-Next', 'Walk-Step9-Next__Simple-project-setup', 'Walk-Funnel-B');
       } //end onNext
-      } //end OnPrev
     },
     {
       target: 'screenshot',

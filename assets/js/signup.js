@@ -16,15 +16,61 @@ var validator = {
               url = 'http://' + url;
           } // end change URL
 
-          $.ajax({
+          var verifyUrl = function(callback) {
+            var xhr = Utils.corsRequest('GET',Utils.apiServer + 'utils/validate-url?url=' + encodeURIComponent(url));
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState == 4 && xhr.status == 200) {
+                callback(xhr.responseText);
+              } //end if
+            };
+            xhr.send();
+          } //end vUrl
+
+          function callback(dataString) {
+            var data = JSON.parse(dataString);
+            console.log('verify URL',data);
+
+            if (data.exist === true) {
+                var stripRegex            = /(https?:\/\/)/,
+                    suggestedUrl          = data.redirected_path[data.redirected_path.length - 1].url,
+                    suggestedUrlClean     = suggestedUrl.replace(stripRegex, '').replace(/\/$/, ''),
+                    urlClean              = url.replace(stripRegex, '').replace(/\/$/, '');
+
+                validator.hasValidURL = true;
+                validator.hasValidURLValue = suggestedUrl;
+                $('.website-url').removeClass('bad wait').addClass('good');
+
+                // GA Event
+                ga('send',
+                   'event',
+                   'Walk-URL-Added',
+                   'Walk-URL-Added' +
+                       '__URL_' + suggestedUrlClean,
+                   'Walk-Funnel-B'
+                  );
+
+                if (data.redirected === true && suggestedUrlClean !== urlClean) {
+                  // If we are here, the redirected url is significantly different
+                  $('#url').val(suggestedUrlClean); // write the redirected and clean URL back to input box
+                } // end if
+
+            } else {
+                // If we are here, the url could not be resolved
+                Utils.message('.website-url','.website-url-check','! Oops, that URL doesn\'t look correct. Please try again.');
+            }
+          }   //end callback
+
+          verifyUrl(callback); // execute
+
+          /* $.ajax({
               'url'         : Utils.apiServer + 'utils/validate-url?url=' + encodeURIComponent(url),
               'type'        : 'GET',
               'processData' : true,
               'contentType' : 'application/json',
               'accepts'     : 'application/json',
               'dataType'    : 'JSON',
-              'headers'    : { 'Accept': 'application/json' },
-              'xhrFields'  : { withCredentials: true },
+              'headers'     : { 'Accept' : 'application/json'},
+              'xhrFields'   : { withCredentials : true},
               'success'     : function (data) {
                                 console.log("urlValidator data", data);
                                 if (data.exist === true) {
@@ -56,7 +102,7 @@ var validator = {
                                     Utils.message('.website-url','.website-url-check','! Oops, that URL doesn\'t look correct. Please try again.');
                                 }
                               } // end success.
-            }); // end ajax call
+            }); // end ajax call */
       }, // end validateUrl
       "validateName" : function (nameField) {
           validator.hasValidName = false; // reset hasValidName flag
@@ -103,10 +149,8 @@ var validator = {
                 'contentType' : 'application/json',
                 'accepts'     : 'application/json',
                 'dataType'    : 'JSON',
-                'headers'    : { 'Accept': 'application/json',
-                                 'Access-Control-Allow-Origin', 'glasshat.com'
-                               },
-                'xhrFields'  : { withCredentials: true },
+                'headers'     : { 'Accept': 'application/json' },
+                'xhrFields'   : { withCredentials: true },
                 'success'     : function (data) {
                                   if (data.errors) {
                                       console.log("account exists");
