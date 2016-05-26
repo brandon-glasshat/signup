@@ -82,3 +82,7 @@
 .pageId {
   font-size: 10px;
 }
+
+.bg-image {
+  z-index: 1
+}

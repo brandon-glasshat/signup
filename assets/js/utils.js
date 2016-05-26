@@ -1,9 +1,9 @@
 // Utils
 var Utils = {
-              // Production : 'uiServer'  : 'https://app.glasshat.com/',
-              'uiServer'  : 'https://test-2.glasshat.com/latest/',
-              // Production :   'apiServer' : 'https://api-ui.glasshat.com/',
-              'apiServer'  : 'https://test-2.glasshat.com/',
+              'uiServer'  : 'https://app.glasshat.com/v2.7.0/index.html',
+              // 'uiServer'  : 'https://test-2.glasshat.com/latest/',
+              'apiServer' : 'https://api-ui.glasshat.com/',
+              //v'apiServer'  : 'https://test-2.glasshat.com/',
               'message' : function(containerClass, messageClass, message) {
                 $(messageClass).html(message);
                 $(containerClass).removeClass('wait').addClass('bad');
@@ -18,5 +18,5 @@ var Utils = {
                   $('.hopscotch-bubble-arrow-container').show();
                 }, 150);
               }, // end arrowShow
-              'actionCap' : 4 // Set the number of actions per category (quick_audit, full_audit, performance) 
+              'actionCap' : 4 // Set the number of actions per category (quick_audit, full_audit, performance)
             }; // end Utils

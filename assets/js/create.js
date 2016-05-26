@@ -22,6 +22,8 @@ var creator = {
           url: Utils.apiServer + 'keyword/semrush_suggestion?url=' + encodeURIComponent(url),
           method: 'GET',
           data: {},
+          headers   : { 'Accept': 'application/json' },
+          xhrFields : { withCredentials: true },
           success : function (data, status) {
             console.log('semrush_suggestion',data);
             if (!data.errors) {
@@ -80,6 +82,8 @@ var creator = {
                 'contentType' : 'application/json',
                 'accepts' 		: 'application/json',
                 'dataType' 		: 'JSON',
+                'headers'     : { 'Accept': 'application/json' },
+                'xhrFields'   : { withCredentials: true },
           success : function (data, status) {
             that.projectSave(data);
             $(".skip").addClass("fade-in").css("opacity", 1); // make skip step visible
@@ -115,8 +119,10 @@ var creator = {
                 console.log("Polling " + increment);
 
             $.ajax({
-              url: tasksUrl,
-              method: 'GET',
+              url             : tasksUrl,
+              method          : 'GET',
+              'headers'       : { 'Accept': 'application/json' },
+              'xhrFields'     : { withCredentials: true },
               data: {
                 project_name  : that.projectData.project.name,
                 fields        : 'all',
@@ -226,6 +232,8 @@ var creator = {
                   'contentType' : 'application/json',
                   'accepts' 	  : 'application/json',
                   'dataType' 	  : 'JSON',
+                  'headers'     : { 'Accept': 'application/json' },
+                  'xhrFields'   : { withCredentials: true },
                   'success' 	 	: function (data, status) {
                                       that.accountSave(data);
                                       if (data.account) {
@@ -236,7 +244,9 @@ var creator = {
                                         // handle error
                                             console.log("data.errors", data.errors);
                                             if ('account_exists' in data.errors) {
-                                                console.log("Sorry, this email is already registered."); // this shuold never happen as error already caught on previous screen.
+                                              console.log("Sorry, this email is already registered."); // this shuold never happen as error already caught on previous screen.
+                                              alert("It seems you already have an account. You'll be redirected to the login page.");
+                                              window.location.href = 'https://app.glasshat.com/#account/login/';
                                             } // end if
                                       } // end else if
                                     },
@@ -269,6 +279,8 @@ var creator = {
                 'contentType' : 'application/json',
                 'accepts' 		: 'application/json',
                 'dataType' 	  : 'JSON',
+                'headers'     : { 'Accept': 'application/json' },
+                'xhrFields'   : { withCredentials: true },
                 'success' 	 	: function (data, status) {
                                   if (!data.errors) {
                                     // console.log('updateProject data',data);
@@ -290,7 +302,7 @@ var creator = {
             newUrl = Utils.uiServer + '#clients/' + that.accountData.client_id + '/' + 'campaigns/' + that.accountData.project_id + '/plan';
             console.log("redirect to main App ", newUrl);
             window.location.href = newUrl;
-          }, 1000);
+          }, 200);
         }()); // loadDelay()
       }, // end redirect
       "animateTick" : function() {
@@ -317,12 +329,14 @@ var creator = {
 
 } // end creator
 // animations on walkthrough.html (finding best keyword, creating actions, generating plan)
+
+
 $(document).ready(function() {
 
-  $.ajaxSetup({
+  /*$.ajaxSetup({
               headers   : { 'Accept': 'application/json' },
               xhrFields : { withCredentials: true }
-             });
+            }); */
 
   if(localStorage.getItem("glass") === null) {
       window.location.href = '/signup/';

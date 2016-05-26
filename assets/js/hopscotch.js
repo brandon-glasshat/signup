@@ -2292,7 +2292,7 @@
       el.style.left = '0px';
       el.style.width = window.screen.width + 'px';
       el.style.height = documentHeight - (targetBounds.top + utils.getScrollTop() + targetBounds.height + margin) + 'px';
-      el.style.zIndex = 1; 
+      el.style.zIndex = 10; 
 
       // left div:
       el = this.element.left;

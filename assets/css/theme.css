@@ -405,6 +405,7 @@ header.walkthrough-header {
 	/*padding: 15px 15px 0 15px; */
 	border: 1px solid #bebebe;
 	background-color: #fff;
+	z-index: 1
 }
 
 .walkthrough-area img {
