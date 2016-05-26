@@ -2,11 +2,11 @@ var temp;
 
 // Signup Fields Validation
 var validator = {
-      "hasValidURL"      : false,
+      "hasValidURL"      : null,
       "hasValidURLValue" : "",
-      "hasValidName"     : false,
-      "hasValidEmail" 	 : false,
-      "hasValidPassword" : false,
+      "hasValidName"     : null,
+      "hasValidEmail" 	 : null,
+      "hasValidPassword" : null,
 
       "validateUrl" : function(url) {
           validator.hasValidURL = false; // reset hasValidURL flag
@@ -19,11 +19,12 @@ var validator = {
           $.ajax({
               'url'         : Utils.apiServer + 'utils/validate-url?url=' + encodeURIComponent(url),
               'type'        : 'GET',
-              'xhrFields'   : {'withCredentials' : true},
               'processData' : true,
               'contentType' : 'application/json',
               'accepts'     : 'application/json',
               'dataType'    : 'JSON',
+              'headers'    : { 'Accept': 'application/json' },
+              'xhrFields'  : { withCredentials: true },
               'success'     : function (data) {
                                 console.log("urlValidator data", data);
                                 if (data.exist === true) {
@@ -98,11 +99,14 @@ var validator = {
             $.ajax({
                 'url'         : Utils.apiServer + 'account/validate?email=' + encodeURIComponent(emailField),
                 'type'        : 'GET',
-                'xhrFields'   : {'withCredentials' : true},
                 'processData' : true,
                 'contentType' : 'application/json',
                 'accepts'     : 'application/json',
                 'dataType'    : 'JSON',
+                'headers'    : { 'Accept': 'application/json',
+                                 'Access-Control-Allow-Origin', 'glasshat.com'
+                               },
+                'xhrFields'  : { withCredentials: true },
                 'success'     : function (data) {
                                   if (data.errors) {
                                       console.log("account exists");
@@ -167,10 +171,9 @@ var validator = {
 // Attach blur event to input fields
 $(document).ready(function () {
   $.ajaxSetup({
-              headers   : { 'Accept' : 'application/json',
-                            'Access-Control-Allow-Origin' : '*'
+              headers   : { 'Accept' : 'application/json'
                           },
-              xhrFields : { 'withCredentials' : true
+              xhrFields : { withCredentials : true
                           }
             });
 
@@ -192,6 +195,25 @@ $(document).ready(function () {
   // Attach click event to lets go button and shake blank entries.
   $('#letsGo').click(function () {
 
+
+    if (validator.hasValidURL === null) {
+      $('.website-url').addClass('wait');
+      validator.validateUrl($('#url').val());
+    }
+
+    if (validator.hasValidName === null) {
+      validator.validateName($('#firstName').val());
+    }
+
+    if (validator.hasValidEmail === null) {
+      validator.validateEmail($('#email').val());
+    }
+
+    if (validator.hasValidPassword === null) {
+      validator.validatePassword($('#password').val());
+    }
+
+
     function shake(divId) {
       return $(divId).effect( "shake", {distance:3});
     } // end shake
@@ -204,6 +226,7 @@ $(document).ready(function () {
         shake('.website-url-check');
       }
     }
+
     if (validator.hasValidName === false) {
       if ($('#firstName').val().length === 0) {
         Utils.message('.first-name','.first-name-check','! Please enter your name');

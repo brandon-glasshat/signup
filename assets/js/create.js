@@ -19,20 +19,22 @@ var creator = {
 
         // get keyword suggestion data
         $.ajax({
-          url: Utils.apiServer + 'keyword/semrush_suggestion?url=' + encodeURIComponent(url),
-          method: 'GET',
-          data: {},
-          success : function (data, status) {
-            console.log('semrush_suggestion',data);
-            if (!data.errors) {
-              console.log('keyword data',data);
-              that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
-            } else {
-              console.log('keyword errors',data.errors);
-              // handle errors ('Sorry, suggested keywords could not be retrieved at this time.');
-            }
-          },
-          error : function (data, status) {
+          'url'        : Utils.apiServer + 'keyword/semrush_suggestion?url=' + encodeURIComponent(url),
+          'method'     : 'GET',
+          'headers'    : { 'Accept': 'application/json' },
+          'xhrFields'  : { withCredentials: true },
+          'data'       : {},
+          'success'    : function (data, status) {
+                              console.log('semrush_suggestion',data);
+                              if (!data.errors) {
+                                console.log('keyword data',data);
+                                that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
+                              } else {
+                                console.log('keyword errors',data.errors);
+                                // handle errors ('Sorry, suggested keywords could not be retrieved at this time.');
+                              }
+                          },
+          'error'      : function (data, status) {
               console.log('keyword API Error',data);
             // handle errors ('Sorry, suggested keywords could not be retrieved at this time.');
           }
@@ -73,18 +75,21 @@ var creator = {
         $(".wstep3").css("opacity", 1); // creating actions
 
         $.ajax({
-                url						: Utils.apiServer + '/onboarding/project/create',
-                method				: 'POST',
-                data					: JSON.stringify({project: that.kwMappings}),
+                'url'					: Utils.apiServer + '/onboarding/project/create',
+                'method'			: 'POST',
+                'data'				: JSON.stringify({project: that.kwMappings}),
                 'processData' : true,
                 'contentType' : 'application/json',
                 'accepts' 		: 'application/json',
                 'dataType' 		: 'JSON',
-            that.projectSave(data);
-            $(".skip").addClass("fade-in").css("opacity", 1); // make skip step visible
-            that.pollAudit();
-          }, // end success
-          error : function (data, status) {
+                'headers'     : { 'Accept': 'application/json' },
+                'xhrFields'   : { withCredentials: true },
+                'success'     : function (data, status) {
+                                  that.projectSave(data);
+                                  $(".skip").addClass("fade-in").css("opacity", 1); // make skip step visible
+                                  that.pollAudit();
+                                }, // end success
+                'error'       : function (data, status) {
           // todo: handle error
           } // end error
         }); //.ajax
@@ -151,15 +156,6 @@ var creator = {
                   // error occurred
                   // display error message
                 }
-              },
-              error : function () {
-                // handle error
-              }
-            }); // $.ajax
-                increment++;
-                clearTimeout(timeOut);
-                timeOut = setTimeout(daemon, TIME_INTERVAL);
-            } //end else
         }()); // end self-invoking daemon()
       }, // end pollAudit
       "actionPriority"  : function(data) {
@@ -241,9 +237,6 @@ var creator = {
                                             } // end if
                                       } // end else if
                                     },
-                                    'error' : function (data, status) {
-                                        console.log("ajax.error");
-                                    } // end success
                 }); // end ajax
       }, //end createAccount
       "updateProject"  : function(keyword) {
@@ -323,10 +316,7 @@ var creator = {
 $(document).ready(function() {
 
   $.ajaxSetup({
-              headers   : { 'Accept' : 'application/json',
-                            'Access-Control-Allow-Origin' : '*'
                           },
-              xhrFields : { 'withCredentials' : true
                           }
             });
 
@@ -336,9 +326,7 @@ $(document).ready(function() {
   } else {
       var aStore = JSON.parse(localStorage.getItem("glass")).a;
 
-      creator.keywordSuggest(aStore); // kick things off by starting keyword suggestion
 
-    	$(".walkthrough").addClass("animate"); // start timer animation
 
       // Attach GA event to Skip button
       $(".skip").click(function() {
