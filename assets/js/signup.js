@@ -1,4 +1,3 @@
-var temp;
 
 // Signup Fields Validation
 var validator = {
@@ -9,6 +8,7 @@ var validator = {
       "hasValidPassword" : null,
 
       "validateUrl" : function(url) {
+
           validator.hasValidURL = false; // reset hasValidURL flag
           $('.website-url').removeClass('bad good'); // remove message classes
 
@@ -16,47 +16,42 @@ var validator = {
               url = 'http://' + url;
           } // end change URL
 
-          $.ajax({
-              'url'         : Utils.apiServer + 'utils/validate-url?url=' + encodeURIComponent(url),
-              'type'        : 'GET',
-              'processData' : true,
-              'contentType' : 'application/json',
-              'accepts'     : 'application/json',
-              'dataType'    : 'JSON',
-              'headers'    : { 'Accept': 'application/json' },
-              'xhrFields'  : { withCredentials: true },
-              'success'     : function (data) {
-                                console.log("urlValidator data", data);
-                                if (data.exist === true) {
-                                    var stripRegex            = /(https?:\/\/)/,
-                                        suggestedUrl          = data.redirected_path[data.redirected_path.length - 1].url,
-                                        suggestedUrlClean     = suggestedUrl.replace(stripRegex, '').replace(/\/$/, ''),
-                                        urlClean              = url.replace(stripRegex, '').replace(/\/$/, '');
+          function callback(dataString) {
+            var data = JSON.parse(dataString);
+            console.log('verify URL',data);
 
-                                    validator.hasValidURL = true;
-                                    validator.hasValidURLValue = suggestedUrl;
-                                    $('.website-url').removeClass('bad wait').addClass('good');
+            if (data.exist === true) {
+                var stripRegex            = /(https?:\/\/)/,
+                    suggestedUrl          = data.redirected_path[data.redirected_path.length - 1].url,
+                    suggestedUrlClean     = suggestedUrl.replace(stripRegex, '').replace(/\/$/, ''),
+                    urlClean              = url.replace(stripRegex, '').replace(/\/$/, '');
 
-                                    // GA Event
-                                    ga('send',
-                                       'event',
-                                       'Walk-URL-Added',
-                                       'Walk-URL-Added' +
-                                           '__URL_' + suggestedUrlClean,
-                                       'Walk-Funnel-B'
-                                      );
+                validator.hasValidURL = true;
+                validator.hasValidURLValue = suggestedUrl;
+                $('.website-url').removeClass('bad wait').addClass('good');
 
-                                    if (data.redirected === true && suggestedUrlClean !== urlClean) {
-                                      // If we are here, the redirected url is significantly different
-                                      $('#url').val(suggestedUrlClean); // write the redirected and clean URL back to input box
-                                    } // end if
+                // GA Event
+                ga('send',
+                   'event',
+                   'Walk-URL-Added',
+                   'Walk-URL-Added' +
+                   '__URL_' + suggestedUrlClean,
+                   'Walk-Funnel-B'
+                  );
 
-                                } else {
-                                    // If we are here, the url could not be resolved
-                                    Utils.message('.website-url','.website-url-check','! Oops, that URL doesn\'t look correct. Please try again.');
-                                }
-                              } // end success.
-            }); // end ajax call
+                if (data.redirected === true && suggestedUrlClean !== urlClean) {
+                  // If we are here, the redirected url is significantly different
+                  $('#url').val(suggestedUrlClean); // write the redirected and clean URL back to input box
+                } // end if
+
+            } else {
+                // If we are here, the url could not be resolved
+                Utils.message('.website-url','.website-url-check','! Oops, that URL doesn\'t look correct. Please try again.');
+            }
+          }//end callback
+
+          Utils.corsRequest('GET',Utils.apiServer + 'utils/validate-url?url=' + encodeURIComponent(url), callback); // Validate URL Api
+
       }, // end validateUrl
       "validateName" : function (nameField) {
           validator.hasValidName = false; // reset hasValidName flag
@@ -96,28 +91,21 @@ var validator = {
 
           } else {
 
-            $.ajax({
-                'url'         : Utils.apiServer + 'account/validate?email=' + encodeURIComponent(emailField),
-                'type'        : 'GET',
-                'processData' : true,
-                'contentType' : 'application/json',
-                'accepts'     : 'application/json',
-                'dataType'    : 'JSON',
-                'headers'    : { 'Accept': 'application/json',
-                                 'Access-Control-Allow-Origin', 'glasshat.com'
-                               },
-                'xhrFields'  : { withCredentials: true },
-                'success'     : function (data) {
-                                  if (data.errors) {
-                                      console.log("account exists");
-                                      Utils.message('.email-address','.email-address-check','! It seems you already have an account. <a href="https://app.glasshat.com/#account/login/">Log In Here</a>');
-                                  } else {
-                                      validator.hasValidEmail = true;
-                                      $('.email-address').removeClass('bad wait').addClass('good');
-                                  }
-                                } // end success.
-              }); // end ajax call
-          } // end if
+            function callback(dataString) {
+              var data = JSON.parse(dataString);
+              
+              if (data.errors) {
+                  console.log("account exists");
+                  Utils.message('.email-address','.email-address-check','! It seems you already have an account. <a href="https://app.glasshat.com/#account/login/">Log In Here</a>');
+              } else {
+                  validator.hasValidEmail = true;
+                  $('.email-address').removeClass('bad wait').addClass('good');
+              } // end else
+            } // end callback
+
+            Utils.corsRequest('GET', Utils.apiServer + 'account/validate?email=' + encodeURIComponent(emailField), callback); //
+
+          } // end else
       }, // end validateEmail
       "validatePassword" : function (passwordField) {
           validator.hasValidPassword = false; // reset hasValidName flag

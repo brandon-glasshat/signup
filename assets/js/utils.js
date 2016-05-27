@@ -18,5 +18,38 @@ var Utils = {
                   $('.hopscotch-bubble-arrow-container').show();
                 }, 150);
               }, // end arrowShow
+              'corsRequest' : function(method, server, callback) {
+
+                function xhrRequest (method, url) {
+                  var xhr = new XMLHttpRequest();
+                    xhr.withCredentials = true;
+                  if ("withCredentials" in xhr) {
+
+                    xhr.open(method, url, true);
+
+                  } else if (typeof XDomainRequest != "undefined") {
+
+                    xhr = new XDomainRequest();
+                    xhr.open(method, url);
+
+                  } else {
+
+                    // Otherwise, CORS is not supported by the browser.
+                    xhr = null;
+
+                  } //end else
+                  return xhr;
+                } // end xhrRequest
+
+                var cors = xhrRequest(method, server);
+
+                cors.onreadystatechange = function() {
+                  if (cors.readyState == 4 && cors.status == 200) {
+                    callback(cors.responseText);
+                  } //end if
+                }; // end cors.onreadystatechange
+                cors.send(); // send request
+                
+              }, // end corsRequest1
               'actionCap' : 4 // Set the number of actions per category (quick_audit, full_audit, performance)
             }; // end Utils

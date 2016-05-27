@@ -14,31 +14,27 @@ var creator = {
           this.accountData = data;
       }, //end projectSave
       'keywordSuggest' : function(url) {
-        var that = this,
-            mappings;
+        var that = this;
 
-        // get keyword suggestion data
-        $.ajax({
-          'url'        : Utils.apiServer + 'keyword/semrush_suggestion?url=' + encodeURIComponent(url),
-          'method'     : 'GET',
-          'headers'    : { 'Accept': 'application/json' },
-          'xhrFields'  : { withCredentials: true },
-          'data'       : {},
-          'success'    : function (data, status) {
-                              console.log('semrush_suggestion',data);
-                              if (!data.errors) {
-                                console.log('keyword data',data);
-                                that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
-                              } else {
-                                console.log('keyword errors',data.errors);
-                                // handle errors ('Sorry, suggested keywords could not be retrieved at this time.');
-                              }
-                          },
-          'error'      : function (data, status) {
-              console.log('keyword API Error',data);
+        function callback(dataString) {
+          var data = JSON.parse(dataString);
+
+          if (!data.errors) {
+            if (data == '') {
+              console.log('No keywords', data);
+              that.defaultVolumeMappings(url); // format into an API friendly format in 'mappings'
+            } else {
+              console.log('Keywords', data);
+              that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
+            } // else
+          } else {
+            console.log('keyword errors',data.errors);
             // handle errors ('Sorry, suggested keywords could not be retrieved at this time.');
-          }
-        }); // $.ajax
+          } // end else
+        } // end callback
+
+        Utils.corsRequest('GET', Utils.apiServer + 'keyword/semrush_suggestion?url=' + encodeURIComponent(url), callback); // Keyword Suggest API
+
       }, // end KeywordSuggest
       "createVolumeMappings" : function (data, url) {
 
@@ -66,7 +62,29 @@ var creator = {
 
           this.createProject(); // create new project
 
-      }, // end createVolumeMappings
+      }, // createVolumeMappings
+      "defaultVolumeMappings" : function (url) {
+
+        var volumes = [],
+            mapping = [];
+
+          // map response to expected API JSON
+          volumes.push({
+                        'keyword'  : url,
+                        'currency' : 'USD'
+                       });
+          mapping.push({
+                        'url' 		 : url,
+                        'keywords' : [url]
+                       });
+          this.kwMappings = {
+                             'url'								: url,
+                             'volumes'						: volumes,
+                             'mappings'						: mapping,
+                             'search_engine_code' : 'google_en-us'
+                            };
+          this.createProject(); // create new project
+      }, // end defaultVolumeMappings
       "createProject"  : function() {
 
         var that = this;
@@ -119,43 +137,52 @@ var creator = {
                 console.log("Polling " + increment);
 
             $.ajax({
-              url             : tasksUrl,
-              method          : 'GET',
-              data: {
-                project_name  : that.projectData.project.name,
-                fields        : 'all',
-                filters       : '[["task_type","in","quick_audit","full_audit"],["is_declined","eq","false"],["is_planned","eq","false"],["is_finished","eq","false"]]'
-              },
-              success: function (data, status){
-                if (!data.errors) {
-                  console.log('data.tasks.length ', data.tasks.length);
+                    url             : tasksUrl,
+                    method          : 'GET',
+                    data: {
+                      project_name  : that.projectData.project.name,
+                      fields        : 'all',
+                      filters       : '[["task_type","in","quick_audit","full_audit"],["is_declined","eq","false"],["is_planned","eq","false"],["is_finished","eq","false"]]'
+                    },
+                    success: function (data, status){
+                      if (!data.errors) {
+                        console.log('data.tasks.length ', data.tasks.length);
 
-                  // cancel polling if actions are available
-                  if (data.tasks.length > 0) {
-                      that.actionPriority(data.tasks);
-                      that.animateTick();
+                        // cancel polling if actions are available
+                        if (data.tasks.length > 0) {
+                            that.actionPriority(data.tasks);
+                            that.animateTick();
 
-                  // GA Event
-                  ga('send',
-                     'event',
-                     'Walk-Actions-Generated',
-                     'Walk-Actions-Generated' +
-                         '__URL_'     + JSON.parse(localStorage.getItem("glass")).a +
-                         '__Name_'    + JSON.parse(localStorage.getItem("glass")).b +
-                         '__email_'   + JSON.parse(localStorage.getItem("glass")).c +
-                         '__Actions_' + data.tasks.length,
-                     'Walk-Funnel-B'
-                    );
+                        // GA Event
+                        ga('send',
+                           'event',
+                           'Walk-Actions-Generated',
+                           'Walk-Actions-Generated' +
+                               '__URL_'     + JSON.parse(localStorage.getItem("glass")).a +
+                               '__Name_'    + JSON.parse(localStorage.getItem("glass")).b +
+                               '__email_'   + JSON.parse(localStorage.getItem("glass")).c +
+                               '__Actions_' + data.tasks.length,
+                           'Walk-Funnel-B'
+                          );
 
-                    increment = POLL_ITERATIONS; // max out iterations to exit
+                          increment = POLL_ITERATIONS; // max out iterations to exit
 
-                  } else {
-                    // @todo: handle 'no actions available'
-                  }
-                } else {
-                  // error occurred
-                  // display error message
+                        } else {
+                          // @todo: handle 'no actions available'
+                        }
+                      } else {
+                        // error occurred
+                        // display error message
+                      }
+                },
+                'error' : function () {
+                  // handle error
                 }
+              }); // $.ajax
+                  increment++;
+                  clearTimeout(timeOut);
+                  timeOut = setTimeout(daemon, TIME_INTERVAL);
+              } //end else
         }()); // end self-invoking daemon()
       }, // end pollAudit
       "actionPriority"  : function(data) {
@@ -221,6 +248,8 @@ var creator = {
                   'contentType' : 'application/json',
                   'accepts' 	  : 'application/json',
                   'dataType' 	  : 'JSON',
+                  'headers'     : { 'Accept': 'application/json' },
+                  'xhrFields'   : { withCredentials: true },
                   'success' 	 	: function (data, status) {
                                       that.accountSave(data);
                                       if (data.account) {
@@ -237,6 +266,9 @@ var creator = {
                                             } // end if
                                       } // end else if
                                     },
+                  'error'       : function (data, status) {
+                                    console.log("ajax.error");
+                                  } // end error
                 }); // end ajax
       }, //end createAccount
       "updateProject"  : function(keyword) {
@@ -263,6 +295,8 @@ var creator = {
                 'contentType' : 'application/json',
                 'accepts' 		: 'application/json',
                 'dataType' 	  : 'JSON',
+                'headers'     : { 'Accept': 'application/json' },
+                'xhrFields'   : { withCredentials: true },
                 'success' 	 	: function (data, status) {
                                   if (!data.errors) {
                                     // console.log('updateProject data',data);
@@ -316,7 +350,9 @@ var creator = {
 $(document).ready(function() {
 
   $.ajaxSetup({
+              headers   : { 'Accept' : 'application/json'
                           },
+              xhrFields : { withCredentials : true
                           }
             });
 
@@ -326,7 +362,11 @@ $(document).ready(function() {
   } else {
       var aStore = JSON.parse(localStorage.getItem("glass")).a;
 
+      setTimeout(function() {
+        creator.keywordSuggest(aStore); // kick things off by starting keyword suggestion
+      }, 2800);
 
+      $(".walkthrough").addClass("animate"); // start timer animation
 
       // Attach GA event to Skip button
       $(".skip").click(function() {

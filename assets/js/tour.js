@@ -197,7 +197,8 @@ var tour = {
       }, //end OnPrev
       onNext: function() {
         Utils.arrowHide();
-      } //end OnPrev
+        ga('send', 'event', 'Walk-Step9-Next', 'Walk-Step9-Next__Simple-project-setup', 'Walk-Funnel-B');
+      } //end onNext
     },
     {
       target: 'screenshot',
@@ -218,7 +219,7 @@ var tour = {
         setTimeout(function() {
           $( ".ready-class" ).trigger( "click" );
         }, 500);
-        ga('send', 'event', 'Walk-Step9-End', 'Walk-Step9-End__Simple-project-setup', 'Walk-Funnel-B');
+        ga('send', 'event', 'Walk-Step10-End', 'Walk-Step10-End__And-thats-just-the-start', 'Walk-Funnel-B');
       } //end OnEnd
   ,
   showPrevButton: true,
