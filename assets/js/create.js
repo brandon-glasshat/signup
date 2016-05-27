@@ -152,6 +152,7 @@ var creator = {
                         if (data.tasks.length > 0) {
                             that.actionPriority(data.tasks);
                             that.animateTick();
+                            that.enableSeeActionPlan();
 
                         // GA Event
                         ga('send',
@@ -210,7 +211,7 @@ var creator = {
 
           this.autoPlanIds = quickAudit.concat(fullAudit, performance); // Add prioritised actions in order
 
-      }, // end actionPriority
+      },// end actionPriority
       "createAccount"  : function() {
           var that = this,
               newAccount =  {
@@ -341,8 +342,12 @@ var creator = {
         	setTimeout(function() {
         		$(".tick-white").removeClass("hidden"); // adds the white tick
         	}, 2800);
-      } // end animateTick
-
+      }, // end animateTick
+      "enableSeeActionPlan"  : function() {
+        $('input[type="submit"]').prop('disabled', false)
+        .prop('value', 'SEE ACTION PLAN')
+        .css('background-color', '#ff6600');
+      } // end enableSeeActionPlan
 } // end creator
 // animations on walkthrough.html (finding best keyword, creating actions, generating plan)
 
@@ -361,6 +366,8 @@ $(document).ready(function() {
 
   } else {
       var aStore = JSON.parse(localStorage.getItem("glass")).a;
+
+      $('input[type="submit"]').prop('disabled', true); //disable See Action Plan Button
 
       setTimeout(function() {
         creator.keywordSuggest(aStore); // kick things off by starting keyword suggestion
@@ -388,6 +395,7 @@ $(document).ready(function() {
 
     	// keyword submit
     	$("#user-kw-submit").click(function() {
+
     		var newKw = $("#user-kw").val();
     		if (creator.keyword === newKw) {
     			creator.createAccount(); // redirect to App

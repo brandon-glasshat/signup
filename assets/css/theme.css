@@ -525,7 +525,8 @@ header.walkthrough-header {
 }
 .keyword-popup input[type="submit"] {
 	width: 225px;
-	background-color: #ff6600;
+	/* background-color: #ff6600; */
+	background-color: rgba(0, 0, 0, 0.25);
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -536,9 +537,9 @@ header.walkthrough-header {
 	font-weight: 700;
 	cursor: pointer;
 }
-.keyword-popup input[type="submit"]:hover {
+/* .keyword-popup input[type="submit"]:hover {
 	background-color: #FE9602;
-}
+}*/
 
 .question-mark {
     background-image: url("../img/question.png");
