@@ -1,13 +1,14 @@
 
 // Signup Fields Validation
 var validator = {
-      "hasValidURL"      : null,
-      "hasValidURLValue" : "",
-      "hasValidName"     : null,
-      "hasValidEmail" 	 : null,
-      "hasValidPassword" : null,
-
+      "hasValidURL"           : null,
+      "hasValidURLValue"      : null,
+      "hasValidURLValueClean" : null,
+      "hasValidName"          : null,
+      "hasValidEmail" 	      : null,
+      "hasValidPassword"      : null,
       "validateUrl" : function(url) {
+          var that = this;
 
           validator.hasValidURL = false; // reset hasValidURL flag
           $('.website-url').removeClass('bad good'); // remove message classes
@@ -17,7 +18,7 @@ var validator = {
           } // end change URL
 
           function callback(dataString) {
-            var data = JSON.parse(dataString);
+            data = JSON.parse(dataString);
             console.log('verify URL',data);
 
             if (data.exist === true) {
@@ -26,8 +27,9 @@ var validator = {
                     suggestedUrlClean     = suggestedUrl.replace(stripRegex, '').replace(/\/$/, ''),
                     urlClean              = url.replace(stripRegex, '').replace(/\/$/, '');
 
-                validator.hasValidURL = true;
-                validator.hasValidURLValue = suggestedUrl;
+                that.hasValidURL = true;
+                that.hasValidURLValue = suggestedUrl;
+                that.hasValidURLValueClean = suggestedUrlClean;
                 $('.website-url').removeClass('bad wait').addClass('good');
 
                 // GA Event
@@ -93,7 +95,7 @@ var validator = {
 
             function callback(dataString) {
               var data = JSON.parse(dataString);
-              
+
               if (data.errors) {
                   console.log("account exists");
                   Utils.message('.email-address','.email-address-check','! It seems you already have an account. <a href="https://app.glasshat.com/#account/login/">Log In Here</a>');
@@ -135,10 +137,11 @@ var validator = {
           } // end if
       }, // end validatePassword
       "tempStore" : function() {
-          localStorage.setItem("glass", JSON.stringify({'a' : validator.hasValidURLValue,
+          localStorage.setItem("glass", JSON.stringify({'a' : this.hasValidURLValue,
                                                         'b' : $.trim($('#firstName').val()),
                                                         'c' : $.trim($('#email').val()),
-                                                        'd' : md5($('#password').val())
+                                                        'd' : md5($('#password').val()),
+                                                        'e' : this.hasValidURLValueClean
                                                       }));
       }, // end tempStore
       'cssAnimator' : function() {

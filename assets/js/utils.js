@@ -42,14 +42,15 @@ var Utils = {
                 } // end xhrRequest
 
                 var cors = xhrRequest(method, server);
-
                 cors.onreadystatechange = function() {
                   if (cors.readyState == 4 && cors.status == 200) {
                     callback(cors.responseText);
+                  } else if (cors.readyState == 4 && cors.status == 0) {
+                    callback(null);
                   } //end if
                 }; // end cors.onreadystatechange
                 cors.send(); // send request
-                
+
               }, // end corsRequest1
               'actionCap' : 4 // Set the number of actions per category (quick_audit, full_audit, performance)
             }; // end Utils

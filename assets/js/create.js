@@ -18,19 +18,14 @@ var creator = {
 
         function callback(dataString) {
           var data = JSON.parse(dataString);
+          console.log('data',data);
 
-          if (!data.errors) {
-            if (data == '') {
-              console.log('No keywords', data);
-              that.defaultVolumeMappings(url); // format into an API friendly format in 'mappings'
+            if (data === null) {
+              that.defaultVolumeMappings(); // format into an API friendly format in 'mappings'
             } else {
               console.log('Keywords', data);
               that.createVolumeMappings(data, url); // format into an API friendly format in 'mappings'
-            } // else
-          } else {
-            console.log('keyword errors',data.errors);
-            // handle errors ('Sorry, suggested keywords could not be retrieved at this time.');
-          } // end else
+            } // end else
         } // end callback
 
         Utils.corsRequest('GET', Utils.apiServer + 'keyword/semrush_suggestion?url=' + encodeURIComponent(url), callback); // Keyword Suggest API
@@ -63,19 +58,21 @@ var creator = {
           this.createProject(); // create new project
 
       }, // createVolumeMappings
-      "defaultVolumeMappings" : function (url) {
-
-        var volumes = [],
-            mapping = [];
-
+      "defaultVolumeMappings" : function () {
+        var volumes      = [],
+            mapping      = [],
+            url          = JSON.parse(localStorage.getItem("glass")).a,
+            urlClean     = JSON.parse(localStorage.getItem("glass")).e;
           // map response to expected API JSON
           volumes.push({
-                        'keyword'  : url,
+                        'keyword'  : urlClean,
+                        'volume' 	 : 0,
+                        'cpc'			 : 0,
                         'currency' : 'USD'
                        });
           mapping.push({
                         'url' 		 : url,
-                        'keywords' : [url]
+                        'keywords' : [urlClean]
                        });
           this.kwMappings = {
                              'url'								: url,
@@ -103,6 +100,7 @@ var creator = {
                 'headers'     : { 'Accept': 'application/json' },
                 'xhrFields'   : { withCredentials: true },
                 'success'     : function (data, status) {
+                                  console.log('createProject data',data);
                                   that.projectSave(data);
                                   $(".skip").addClass("fade-in").css("opacity", 1); // make skip step visible
                                   that.pollAudit();
