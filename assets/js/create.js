@@ -236,7 +236,7 @@ var creator = {
                  '__email_'  + JSON.parse(localStorage.getItem("glass")).c +
                  '__GenKW_'  + this.keyword +
                  '__CustKW_' + this.custKW,
-             'Walk-Funnel-B'
+             'Walk-Funnel-C'
             );
 
           $.ajax({
