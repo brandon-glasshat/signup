@@ -1,6 +1,6 @@
 // Utils
 var Utils = {
-              'uiServer'  : 'https://app.glasshat.com/v2.7.0/index.html',
+              'uiServer'  : 'https://app.glasshat.com/index.html',
               // 'uiServer'  : 'https://test-2.glasshat.com/latest/',
               'apiServer' : 'https://api-ui.glasshat.com/',
               //v'apiServer'  : 'https://test-2.glasshat.com/',
