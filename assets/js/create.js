@@ -239,6 +239,9 @@ var creator = {
              'Walk-Funnel-C'
             );
 
+          // Facebook event
+          fbq('track', 'CompleteRegistration');
+
           $.ajax({
                   'url'         : Utils.apiServer + 'account/create',
                   'method'      : 'POST',
