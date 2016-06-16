@@ -136,14 +136,6 @@ var validator = {
             $('.password-submit').removeClass('bad').addClass('good');
           } // end if
       }, // end validatePassword
-      "tempStore" : function() {
-          localStorage.setItem("glass", JSON.stringify({'a' : this.hasValidURLValue,
-                                                        'b' : $.trim($('#firstName').val()),
-                                                        'c' : $.trim($('#email').val()),
-                                                        'd' : md5($('#password').val()),
-                                                        'e' : this.hasValidURLValueClean
-                                                      }));
-      }, // end tempStore
       "sendData": function() {
         var packed = "";
         packed = JSON.stringify({'a' : this.hasValidURLValue,
@@ -152,7 +144,6 @@ var validator = {
                                  'd' : md5($('#password').val()),
                                  'e' : this.hasValidURLValueClean
                                });
-
        // GA Event
        ga('send',
           'event',
