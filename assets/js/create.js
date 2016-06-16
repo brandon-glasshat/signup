@@ -1,4 +1,3 @@
-var temp;
 var creator = {
       "kwMappings"  : {},
       "projectData" : {},
@@ -6,6 +5,7 @@ var creator = {
       "keyword"     : "",
       "custKW"      : "",
       "autoPlanIds" : [],
+      "tempStore"   : null,
       'projectSave' : function(data) {
           this.projectData = data;
           this.keyword = this.projectData.project.mappings[0].keywords[0].keyword;
@@ -61,8 +61,8 @@ var creator = {
       "defaultVolumeMappings" : function () {
         var volumes      = [],
             mapping      = [],
-            url          = JSON.parse(localStorage.getItem("glass")).a,
-            urlClean     = JSON.parse(localStorage.getItem("glass")).e;
+            url          = this.tempStore.a,
+            urlClean     = this.tempStore.e;
           // map response to expected API JSON
           volumes.push({
                         'keyword'  : urlClean,
@@ -157,9 +157,9 @@ var creator = {
                            'event',
                            'Walk-Actions-Generated',
                            'Walk-Actions-Generated' +
-                               '__URL_'     + JSON.parse(localStorage.getItem("glass")).a +
-                               '__Name_'    + JSON.parse(localStorage.getItem("glass")).b +
-                               '__email_'   + JSON.parse(localStorage.getItem("glass")).c +
+                               '__URL_'     + that.tempStore.a +
+                               '__Name_'    + that.tempStore.b +
+                               '__email_'   + that.tempStore.c +
                                '__Actions_' + data.tasks.length,
                            'Walk-Funnel-B'
                           );
@@ -214,11 +214,11 @@ var creator = {
           var that = this,
               newAccount =  {
                              'account'      : {
-                                                'email'      : JSON.parse(localStorage.getItem("glass")).c,
-                                                'first_name' : JSON.parse(localStorage.getItem("glass")).b
+                                                'email'      : this.tempStore.c,
+                                                'first_name' : this.tempStore.b
                                               },
-                             'new_password' : JSON.parse(localStorage.getItem("glass")).d,
-                             'url'				  : JSON.parse(localStorage.getItem("glass")).a,
+                             'new_password' : this.tempStore.d,
+                             'url'				  : this.tempStore.a,
                              'project_id'   : this.projectData.project.id,
                              'project_name' : this.projectData.project.name,
                              'planned_tasks': this.autoPlanIds,
@@ -231,9 +231,9 @@ var creator = {
              'event',
              'Walk-See-Action-Plan',
              'Walk-See-Action-Plan' +
-                 '__URL_'    + JSON.parse(localStorage.getItem("glass")).a +
-                 '__Name_'   + JSON.parse(localStorage.getItem("glass")).b +
-                 '__email_'  + JSON.parse(localStorage.getItem("glass")).c +
+                 '__URL_'    + this.tempStore.a +
+                 '__Name_'   + this.tempStore.b +
+                 '__email_'  + this.tempStore.c +
                  '__GenKW_'  + this.keyword +
                  '__CustKW_' + this.custKW,
              'Walk-Funnel-C'
@@ -314,7 +314,6 @@ var creator = {
       }, // end updateProject
       "redirect"  : function() {
         that = this;
-        localStorage.clear(); // clear temp local storage.
         (function loadDelay() {
           setTimeout(function(){
             newUrl = Utils.uiServer + '#clients/' + that.accountData.client_id + '/' + 'campaigns/' + that.accountData.project_id + '/plan';
@@ -362,11 +361,11 @@ $(document).ready(function() {
                           }
             });
 
-  if(localStorage.getItem("glass") === null) {
+  if(creator.tempStore === null) {
       window.location.href = '/signup/';
 
   } else {
-      var aStore = JSON.parse(localStorage.getItem("glass")).a;
+      var aStore = creator.tempStore.a;
 
       $('input[type="submit"]').prop('disabled', true); //disable See Action Plan Button
 

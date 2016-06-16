@@ -144,6 +144,29 @@ var validator = {
                                                         'e' : this.hasValidURLValueClean
                                                       }));
       }, // end tempStore
+      "sendData": function() {
+        var packed = "";
+        packed = JSON.stringify({'a' : this.hasValidURLValue,
+                                 'b' : $.trim($('#firstName').val()),
+                                 'c' : $.trim($('#email').val()),
+                                 'd' : md5($('#password').val()),
+                                 'e' : this.hasValidURLValueClean
+                               });
+
+       // GA Event
+       ga('send',
+          'event',
+          'Walk-OK-Lets-Go',
+          'Walk-OK-Lets-Go' +
+              '__URL_'   + JSON.parse(packed).a +
+              '__Name_'  + JSON.parse(packed).b +
+              '__email_' + JSON.parse(packed).c,
+          'Walk-Funnel-B'
+         );
+
+        document.data.data.value = packed; // set hidden form field
+        validator.cssAnimator(); // start CSS animations
+      }, // end sendData
       'cssAnimator' : function() {
       			$(".signup-form").addClass("fade-out");
       			$(".loader").addClass("fly-in");
@@ -154,7 +177,8 @@ var validator = {
       				$(".loading-steps").addClass("load-steps");
       			}, 3000);
       	    	setTimeout(function() {
-      				window.location.href = "walkthrough.html";
+              document.data.submit(); // submit hidden form and go to walkthrogh.php
+      				// window.location.href = "walkthrough.html";
       			}, 4500);
       } // end cssAnimator
 } // end validator
@@ -243,19 +267,9 @@ $(document).ready(function () {
         }
     }
     if(validator.hasValidURL && validator.hasValidName && validator.hasValidEmail && validator.hasValidPassword) {
-      validator.tempStore(); // this needs to be changed.
-      validator.cssAnimator(); // start CSS animations
+      // validator.tempStore(); // this needs to be changed.
+      validator.sendData(); // send Data to walkthrough.php
 
-      // GA Event
-      ga('send',
-         'event',
-         'Walk-OK-Lets-Go',
-         'Walk-OK-Lets-Go' +
-             '__URL_'   + JSON.parse(localStorage.getItem("glass")).a +
-             '__Name_'  + JSON.parse(localStorage.getItem("glass")).b +
-             '__email_' + JSON.parse(localStorage.getItem("glass")).c,
-         'Walk-Funnel-B'
-        );
     } // end if
   }); // end validatePassword
 }); // end docuemnt ready
