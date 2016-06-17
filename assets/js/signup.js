@@ -258,7 +258,6 @@ $(document).ready(function () {
         }
     }
     if(validator.hasValidURL && validator.hasValidName && validator.hasValidEmail && validator.hasValidPassword) {
-      // validator.tempStore(); // this needs to be changed.
       validator.sendData(); // send Data to walkthrough.php
 
     } // end if
