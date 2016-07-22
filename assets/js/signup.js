@@ -172,7 +172,7 @@ var validator = {
       				// window.location.href = "walkthrough.html";
       			}, 4500);
       } // end cssAnimator
-} // end validator
+}; // end validator
 
 // Attach blur event to input fields
 $(document).ready(function () {

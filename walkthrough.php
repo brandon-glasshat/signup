@@ -52,7 +52,6 @@
 			<div class="wstep wstep3">Creating actions</div>
 			<div class="wstep wstep4">Generating plan</div>
 			<div class="wstep wstep5"><a id="ready" class="ready-class" href="walkthrough.php#">READY. LETS GO!</a></div>
-
 			<div class="bubble bubble1 orange"></div>
 			<div class="bubble bubble2 orange"></div>
 			<div class="bubble bubble3 red"></div>

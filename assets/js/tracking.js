@@ -23,3 +23,19 @@ t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '1752841558291919');
 fbq('track', "PageView");
+
+// Intercom
+window.intercomSettings = { app_id: "inyt0lq9" };
+(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function")
+{ic('reattach_activator');ic('update',intercomSettings);}
+else{var d=document;var i=function()
+{i.c(arguments)}
+;i.q=[];i.c=function(args)
+{i.q.push(args)}
+;w.Intercom=i;function l()
+{var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/inyt0lq9';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}
+if(w.attachEvent)
+{w.attachEvent('onload',l);}
+else
+{w.addEventListener('load',l,false);}
+}})()

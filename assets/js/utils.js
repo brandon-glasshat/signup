@@ -45,7 +45,7 @@ var Utils = {
                 cors.onreadystatechange = function() {
                   if (cors.readyState == 4 && cors.status == 200) {
                     callback(cors.responseText);
-                  } else if (cors.readyState == 4 && cors.status == 0) {
+                  } else if (cors.readyState == 4 && cors.status === 0) {
                     callback(null);
                   } //end if
                 }; // end cors.onreadystatechange

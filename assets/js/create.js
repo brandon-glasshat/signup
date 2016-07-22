@@ -37,6 +37,7 @@ var creator = {
             volumes        = [],
             mapping        = [];
 
+        $("#user-kw").val(keywordSuggest.keyword); // add keyword to popup
           // map response to expected API JSON
           volumes.push({
                         'keyword'  : keywordSuggest.keyword,
@@ -63,6 +64,8 @@ var creator = {
             mapping      = [],
             url          = this.tempStore.a,
             urlClean     = this.tempStore.e;
+
+        $("#user-kw").val(urlClean); // add domain to popup
           // map response to expected API JSON
           volumes.push({
                         'keyword'  : urlClean,
@@ -127,7 +130,6 @@ var creator = {
             if (increment >= POLL_ITERATIONS) {
                 // audit timeout
                 console.log('Polling exit');
-                // ('Sorry, there was a problem loading your actions. Please try again.')
                 clearTimeout(timeOut);
 
             } else {
@@ -190,14 +192,14 @@ var creator = {
               fullAudit,
               performance;
 
-          actions = data.filter(function(a){return (a.severity !== 'ok')}); // Filter OK actions
+          actions = data.filter(function(a){return (a.severity !== 'ok');}); // Filter OK actions
 
           function sortLogic (data, category) {
-            return actions.filter(function(a){return (a.task_type === category)})
-                          .sort(function(a, b){return a.priority - b.priority})
+            return actions.filter(function(a){return (a.task_type === category);})
+                          .sort(function(a, b){return a.priority - b.priority;})
                           .slice(0, Utils.actionCap)
-                          .map(function(a){return a.id});
-          }; // end sortLogic
+                          .map(function(a){return a.id;});
+          } // end sortLogic
 
           quickAudit  = sortLogic(data, 'quick_audit');
           fullAudit   = sortLogic(data, 'full_audit');
@@ -348,7 +350,7 @@ var creator = {
         .prop('value', 'SEE ACTION PLAN')
         .css('background-color', '#ff6600');
       } // end enableSeeActionPlan
-} // end creator
+}; // end creator
 // animations on walkthrough.html (finding best keyword, creating actions, generating plan)
 
 
@@ -383,15 +385,14 @@ $(document).ready(function() {
 
     	// keyword popup
     	$(".ready-class").click(function() {
-    		$("#user-kw").val(creator.keyword);
-    		$(".mask").fadeIn();
-    		$(".keyword-popup").fadeIn();
+        $(".mask").fadeIn();
+        $(".keyword-popup").fadeIn();
     	});
 
       // questionmark popup
       $(".question-mark").hover(function() {
     		$(".question").toggle();
-    	})
+    	});
 
     	// keyword submit
     	$("#user-kw-submit").click(function() {

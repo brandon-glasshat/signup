@@ -945,7 +945,8 @@
         winHopscotch.prevStep(true);
       }
       else if (action === 'close'){
-        if (this.opt.isTourBubble){
+        hopscotch.endTour(true);
+        /* if (this.opt.isTourBubble){
           var currStepNum   = winHopscotch.getCurrStepNum(),
               currTour      = winHopscotch.getCurrTour(),
               doEndCallback = (currStepNum === currTour.steps.length-1);
@@ -965,7 +966,7 @@
           else {
             this.destroy();
           }
-        }
+        } */
 
         utils.evtPreventDefault(evt);
       }
@@ -2292,7 +2293,7 @@
       el.style.left = '0px';
       el.style.width = window.screen.width + 'px';
       el.style.height = documentHeight - (targetBounds.top + utils.getScrollTop() + targetBounds.height + margin) + 'px';
-      el.style.zIndex = 10; 
+      el.style.zIndex = 10;
 
       // left div:
       el = this.element.left;

@@ -15,11 +15,7 @@ var tour = {
       onNext: function() {
         Utils.arrowShow();
         ga('send', 'event', 'Walk-Step1-Next', 'Walk-Step1-Next__While-youre-waiting-take-a-tour-of-our-dashboard', 'Walk-Funnel-B');
-      }, //end onNext
-      onClose: function() {
-        console.log('onClose','OnClose');
-        ga('send', 'event', 'Walk-Step1-Close', 'Walk-Step1-Close__While-youre-waiting-take-a-tour-of-our-dashboard', 'Walk-Funnel-B');
-      } // endOnClose
+      } //end onNext
     },
     {
       target: 'action',
@@ -37,9 +33,6 @@ var tour = {
           Utils.arrowHide();
         }, 2020);
       }, //end onPrev
-      onClose: function() {
-        ga('send', 'event', 'Walk-Step2-Close', 'Walk-Step2-Close__Your-action-plan', 'Walk-Funnel-B');
-      }, // endOnClose
       onNext: function() {
         $('#screenshot').css("background-image", "url(assets/img/ss/2.png)");
         Utils.arrowHide();
@@ -60,9 +53,6 @@ var tour = {
         $('#screenshot').css("background-image", "url(assets/img/ss/1.png)");
         Utils.arrowShow();
       }, //end onPrev
-      onClose: function() {
-        ga('send', 'event', 'Walk-Step3-Close', 'Walk-Step3-Close__Need-to-know-how-to-complete-each-action', 'Walk-Funnel-B');
-      }, // endOnClose
       onNext: function() {
         Utils.arrowShow();
         ga('send', 'event', 'Walk-Step3-Next', 'Walk-Step3-Next__Need-to-know-how-to-complete-each-action', 'Walk-Funnel-B');
@@ -81,9 +71,6 @@ var tour = {
       onPrev: function() {
         Utils.arrowHide();
       }, //end onPrev
-      onClose: function() {
-        ga('send', 'event', 'Walk-Step4-Close', 'Walk-Step4-Close__Want-to-send-this-work-onto-someone-else', 'Walk-Funnel-B');
-      }, // endOnClose
       onNext: function() {
         $('#screenshot').css("background-image", "url(assets/img/ss/1.png)");
         Utils.arrowShow();
@@ -105,9 +92,6 @@ var tour = {
         $('#screenshot').css("background-image", "url(assets/img/ss/2.png)");
         Utils.arrowShow();
       }, //end onPrev
-      onClose: function() {
-        ga('send', 'event', 'Walk-Step5-Close', 'Walk-Step5-Close__Ready-to-add-more-actions-to-your-plan', 'Walk-Funnel-B');
-      }, // endOnClose
       onNext: function() {
         $('#screenshot').css("background-image", "url(assets/img/ss/3.png)");
         Utils.arrowShow();
@@ -128,9 +112,6 @@ var tour = {
         $('#screenshot').css("background-image", "url(assets/img/ss/1.png)");
         Utils.arrowShow();
       }, //end onPrev
-      onClose: function() {
-        ga('send', 'event', 'Walk-Step6-Close', 'Walk-Step6-Close__Looking-for-something-specific', 'Walk-Funnel-B');
-      }, // endOnClose
       onNext: function() {
         Utils.arrowShow();
         ga('send', 'event', 'Walk-Step6-Next', 'Walk-Step6-Next__Looking-for-something-specific', 'Walk-Funnel-B');
@@ -150,9 +131,6 @@ var tour = {
       onPrev: function() {
         Utils.arrowShow();
       }, //end onPrev
-      onClose: function() {
-        ga('send', 'event', 'Walk-Step7-Close', 'Walk-Step7-Close__Add-Healthcheck-Actions-to-your-plan', 'Walk-Funnel-B');
-      }, // endOnClose
       onNext: function() {
         Utils.arrowShow();
         ga('send', 'event', 'Walk-Step7-Next', 'Walk-Step7-Next__Add-Healthcheck-Actions-to-your-plan', 'Walk-Funnel-B');
@@ -172,9 +150,6 @@ var tour = {
       onPrev: function() {
         Utils.arrowShow();
       }, //end onPrev
-      onClose: function() {
-        ga('send', 'event', 'Walk-Step8-Close', 'Walk-Step8-Close__Select-Performance-Actions-to-start-overtaking-competitors', 'Walk-Funnel-B');
-      }, // endOnClose
       onNext: function() {
         $('#screenshot').css("background-image", "url(assets/img/ss/4.png)");
         Utils.arrowHide();
