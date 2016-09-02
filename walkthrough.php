@@ -95,7 +95,7 @@
 			<div class="keyword-popup-inner">
 				<h2>One last thing...</h2>
 				<p>
-          Below is a keyword we've detected as potentially relavent for your website. Doesn't look right?
+          Below is a keyword we've detected as potentially relevant for your website. Doesn't look right?
           Lets work together to improve it. <i class="question-mark"></i><br><br>
 				  If you have a specific keyword you want to target, you can edit it below.</p>
 				<form onsubmit="return false;" novalidate>

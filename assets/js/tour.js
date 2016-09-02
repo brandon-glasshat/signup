@@ -207,4 +207,8 @@ var tour = {
   } // end onStart
 };
 
-hopscotch.startTour(tour); // Tour start
+if (window.matchMedia("(min-width: 450px)").matches) {
+  hopscotch.startTour(tour); // Tour start
+} else {
+   console.log('Skipping Tour');
+}
