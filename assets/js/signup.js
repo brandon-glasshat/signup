@@ -78,7 +78,7 @@ var validator = {
           $('.email-address').removeClass('bad good');
 
           function isValidEmail (email) {
-            var regExp = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i
+            var regExp = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
             return regExp.test(email);
           } // end isValidEmail
 
@@ -87,7 +87,7 @@ var validator = {
 
           } else if (emailField.length > 100) {
             Utils.message('.email-address','.email-address-check','! Please enter an address less than 100 characters.');
-˜
+
           } else if (emailField.indexOf('glasshat') !== -1 || emailField.indexOf('searchacademy') !== -1) {
             Utils.message('.email-address','.email-address-check','! Please use a different email address.');
 
