@@ -3,7 +3,7 @@ var Utils = {
               'uiServer'  : 'https://app.glasshat.com/index.html',
               // 'uiServer'  : 'https://test-2.glasshat.com/latest/',
               'apiServer' : 'https://api-ui.glasshat.com/',
-              //v'apiServer'  : 'https://test-2.glasshat.com/',
+              // 'apiServer'  : 'https://test-2.glasshat.com/',
               'message' : function(containerClass, messageClass, message) {
                 $(messageClass).html(message);
                 $(containerClass).removeClass('wait').addClass('bad');
@@ -51,6 +51,7 @@ var Utils = {
                 }; // end cors.onreadystatechange
                 cors.send(); // send request
 
-              }, // end corsRequest1
-              'actionCap' : 4 // Set the number of actions per category (quick_audit, full_audit, performance)
+              }, // end corsRequest
+              // Set the number of actions per category (quick_audit, full_audit, performance)
+              'actionCap' : 4
             }; // end Utils
