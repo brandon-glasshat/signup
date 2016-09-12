@@ -120,7 +120,7 @@ var creator = {
         var that = this,
             tasksUrl = Utils.apiServer + 'onboarding/project/' + this.projectData.project.id + '/tasks',
             TIME_INTERVAL = 5 * 1000, // poll time intervals
-            POLL_ITERATIONS = 24, // maximum number of polling iterations
+            POLL_ITERATIONS = 100, // maximum number of polling iterations
             increment = 0, // used to track polling iterations
             timeOut = null; // reference to timer object
 
