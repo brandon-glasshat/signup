@@ -87,10 +87,10 @@ var validator = {
 
           } else if (emailField.length > 100) {
             Utils.message('.email-address','.email-address-check','! Please enter an address less than 100 characters.');
-
+          /*
           } else if (emailField.indexOf('glasshat') !== -1 || emailField.indexOf('searchacademy') !== -1) {
             Utils.message('.email-address','.email-address-check','! Please use a different email address.');
-
+          */
           } else if (!isValidEmail(emailField)) {
             Utils.message('.email-address','.email-address-check','! Please enter a valid email address.');
 
