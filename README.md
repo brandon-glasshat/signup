@@ -33,10 +33,10 @@ The following is a list of Glasshat API endpoints used in the signup walkthrough
 
 _In signup.js:_
 
-1. __utils/validate-url__.
+1. __```utils/validate-url```__.
 Checks if URL entered on signup form is valid, and also checks if the URL redirects ```[data.redirected=true]```. If URL redirect's, the URL is changed to the final redirected URL ```[data.redirected_path.length - 1]```
 
-2. __account/validate__.
+2. __```account/validate```__.
 Checks if the email address is already registered with Glasshat.
 
 _In create.js:_
@@ -44,16 +44,16 @@ _In create.js:_
 3. __```keyword/semrush_suggestion```__.
 Input URL from form data to get keyword suggestion rom SEM Rush.
 
-4. __/onboarding/project/create__.
+4. __```/onboarding/project/create```__.
 Create onboarding project so we can get quick, full and performance actions. At this stage this project isn't attached to any user account. This is called the _onboarding project_.
 
-5. __onboarding/project/{onboarding_project_id}/tasks__.
+5. __```onboarding/project/{onboarding_project_id}/tasks```__.
 A polling function queries the tasks enpoint every 5 seconds, for a total of 100 times (8.3 minutes total). Loop completes if tasks array length is > 0.
 
-6. __/onboarding/project/{onboarding_project_id}/update__.
+6. __```/onboarding/project/{onboarding_project_id}/update```__.
 Optionally used to update keyword in onboarding project if user decides to overwrite default selection from SEM Rush.
 
-7. __account/create__.
+7. __```account/create```__.
 Finally create a new Glasshat user account and attach the onboarding project to it.
 
 
